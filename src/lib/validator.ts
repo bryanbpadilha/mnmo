@@ -1,4 +1,4 @@
-import { getMobilePhoneLocale, getPostalLocale } from "./utils";
+import { getMobilePhoneLocale, getPostalLocale } from "../util";
 import isEmpty from "validator/lib/isEmpty";
 import isEmail from "validator/lib/isEmail";
 import isMobilePhone from "validator/lib/isMobilePhone";
