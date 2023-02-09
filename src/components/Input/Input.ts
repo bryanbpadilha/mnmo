@@ -1,5 +1,5 @@
 import { Form } from "../Form";
-import { Validator } from "../../lib/validator";
+import { Validator } from "../../lib/Validator";
 
 export interface IInputProps {
   name: string;
@@ -32,7 +32,7 @@ export class Input implements IInputProps {
 
   validate() {
     try {
-      this.validator?.validate(this.value, this.form?.values);
+      this.validator?.validate(this.value, this.form?.data);
       this.error = null;
       this.isValid = true;
     } catch (error: any) {
@@ -74,7 +74,7 @@ export class Input implements IInputProps {
     if (this._isValid !== null) return this._isValid;
 
     try {
-      this.validator?.validate(this.value, this.form?.values);
+      this.validator?.validate(this.value, this.form?.data);
       this.isValid = true;
       return this.isValid;
     } catch (error) {

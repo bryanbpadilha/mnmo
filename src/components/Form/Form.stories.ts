@@ -66,9 +66,9 @@ export const Example: StoryFn = (): HTMLElement => {
 
   if (!formElement) throw new Error("Form element not found.");
 
-  const form = new Form(formElement, {
+  new Form(formElement, {
     async onSubmit(form) {
-      alert(JSON.stringify(form.values, null, 2));
+      alert(JSON.stringify(form.data, null, 2));
     },
 
     onInvalid(form) {

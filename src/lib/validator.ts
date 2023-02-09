@@ -1,5 +1,8 @@
-import _validator from "validator";
 import { getMobilePhoneLocale, getPostalLocale } from "./utils";
+import isEmpty from "validator/lib/isEmpty";
+import isEmail from "validator/lib/isEmail";
+import isMobilePhone from "validator/lib/isMobilePhone";
+import isPostalCode from "validator/lib/isPostalCode";
 
 type TValidationEntry = (value: any, context: unknown) => void;
 
@@ -15,9 +18,9 @@ export class Validator {
   }
 
   required(message: string) {
-    this.validations.push((value: any, context: unknown) => {
+    this.validations.push((value: any, _context: unknown) => {
       if (typeof value === 'string') {
-        if (!_validator.isEmpty(value)) return;
+        if (!isEmpty(value)) return;
       } else if (Array.isArray(value)) {
         if (value.length > 0) return;
       }
@@ -29,8 +32,8 @@ export class Validator {
   }
 
   email(message: string) {
-    this.validations.push((value: any, context: unknown) => {
-      if (_validator.isEmail(value)) return;
+    this.validations.push((value: any, _context: unknown) => {
+      if (isEmail(value)) return;
       throw new Error(message);
     });
 
@@ -38,8 +41,8 @@ export class Validator {
   }
 
   phone(message: string) {
-    this.validations.push((value: any, context: unknown) => {
-      if (_validator.isMobilePhone(value, getMobilePhoneLocale())) return;
+    this.validations.push((value: any, _context: unknown) => {
+      if (isMobilePhone(value, getMobilePhoneLocale())) return;
       throw new Error(message);
     });
 
@@ -47,8 +50,8 @@ export class Validator {
   }
 
   zip(message: string) {
-    this.validations.push((value: any, context: unknown) => {
-      if (_validator.isPostalCode(value, getPostalLocale())) return;
+    this.validations.push((value: any, _context: unknown) => {
+      if (isPostalCode(value, getPostalLocale())) return;
       throw new Error(message);
     });
 

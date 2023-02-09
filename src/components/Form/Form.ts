@@ -40,8 +40,8 @@ export class Form {
       this.handleSubmit(event);
     });
 
-    this.element.addEventListener("change", (event) => {
-      this.handleChange(event);
+    this.element.addEventListener("change", () => {
+      this.handleChange();
     });
 
     createInputs(this, this.validator);
@@ -67,7 +67,7 @@ export class Form {
     }
   }
 
-  handleChange(event: Event) {
+  handleChange() {
     if (this.onChange) {
       this.onChange(this);
     }
@@ -97,14 +97,14 @@ export class Form {
     return errors;
   }
 
-  get values() {
-    const values: { [key: string]: any } = {};
+  get data() {
+    const data: { [key: string]: any } = {};
 
     this.inputs?.forEach((input) => {
-      values[input.name] = input.value;
+      data[input.name] = input.value;
     })
 
-    return values;
+    return data;
   }
 
   get isValid() {
