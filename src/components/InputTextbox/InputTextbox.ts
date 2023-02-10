@@ -17,6 +17,5 @@ export class InputTextbox extends Input {
 
   handleChange() {
     this.value = this.element.value;
-    if (this.onChange) this.onChange(this);
   }
 }

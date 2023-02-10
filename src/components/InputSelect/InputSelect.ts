@@ -17,6 +17,5 @@ export class InputSelect extends Input {
 
   handleChange() {
     this.value = this.element.value;
-    if (this.onChange) this.onChange(this);
   }
 }

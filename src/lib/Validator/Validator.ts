@@ -1,13 +1,13 @@
-import { getMobilePhoneLocale, getPostalLocale } from "../util";
+import { getMobilePhoneLocale, getPostalLocale } from "../../util";
 import isEmpty from "validator/lib/isEmpty";
 import isEmail from "validator/lib/isEmail";
 import isMobilePhone from "validator/lib/isMobilePhone";
 import isPostalCode from "validator/lib/isPostalCode";
 
-type TValidationEntry = (value: any, context: unknown) => void;
+type TValidation = (value: any, context: unknown) => void;
 
 export class Validator {
-  validations: TValidationEntry[];
+  validations: TValidation[];
 
   constructor() {
     this.validations = [];

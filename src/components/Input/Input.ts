@@ -52,6 +52,7 @@ export class Input implements IInputProps {
   set value(_value) {
     this._value = _value;
     if (!this.isDirty) this.isDirty = true;
+    if (this.onChange) this.onChange(this);
   }
 
   get value(): any {

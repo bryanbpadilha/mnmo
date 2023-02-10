@@ -23,6 +23,5 @@ export class InputRadioGroup extends Input {
 
   handleChange() {
     this.value = this.getCheckedRadioValue();
-    if (this.onChange) this.onChange(this);
   }
 }

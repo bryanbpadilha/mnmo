@@ -23,6 +23,5 @@ export class InputCheckGroup extends Input {
 
   handleChange() {
     this.value = this.getCheckedBoxesValue();
-    if (this.onChange) this.onChange(this);
   }
 }

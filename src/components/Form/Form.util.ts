@@ -1,5 +1,5 @@
 import { Form, IFormProps } from "./Form";
-import { InputCheckGroup, InputRadioGroup, InputTextbox } from "..";
+import { InputCheckGroup, InputRadioGroup, InputSelect, InputTextbox } from "..";
 
 const isTextbox = (element: Element) => {
   return [
@@ -22,14 +22,23 @@ const isCheck = (element: Element) => {
   return (element as HTMLInputElement).type === "checkbox";
 };
 
+const isSelect = (element: Element) => {
+  return (element as HTMLSelectElement).tagName === 'SELECT';
+};
+
 export const createInputs = (form: Form, validator: IFormProps['validator']) => {
   const textboxes: HTMLInputElement[] = [];
+  const selects: HTMLSelectElement[] = [];
   const radioGroups: { [key: string]: HTMLInputElement[] } = {};
   const checkGroups: { [key: string]: HTMLInputElement[] } = {};
 
   for (const element of form.element.elements) {
     if (isTextbox(element)) {
       textboxes.push(element as HTMLInputElement);
+    }
+
+    if (isSelect(element)) {
+      selects.push(element as HTMLSelectElement)
     }
 
     if (isRadio(element)) {
@@ -47,6 +56,15 @@ export const createInputs = (form: Form, validator: IFormProps['validator']) => 
     const input = new InputTextbox(textbox, {
       name: textbox.name,
       validator: validator && validator[textbox.name],
+    });
+
+    form.append(input);
+  });
+
+  selects.forEach((select) => {
+    const input = new InputSelect(select, {
+      name: select.name,
+      validator: validator && validator[select.name],
     });
 
     form.append(input);

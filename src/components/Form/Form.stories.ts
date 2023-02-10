@@ -1,6 +1,8 @@
 import { StoryFn, Meta } from "@storybook/html";
 import { Form } from "./Form";
 import { Validator } from "../../lib";
+import { InputTextbox } from "../InputTextbox";
+import { InputMapper } from "../../lib/InputMapper/InputMapper";
 
 export default {} as Meta;
 
@@ -21,10 +23,25 @@ export const Example: StoryFn = (): HTMLElement => {
         </label>
       </div>
 
-      <label>
-        <div>Date</div>
-        <input type="date" name="date" />
-      </label>
+      <div class="grid">
+        <label>
+          <div>Pet</div>
+          <select name="pet">
+            <option value="">Select...</option>
+            <option value="dog">Dog</option>
+            <option value="cat">Cat</option>
+            <option value="hamster">Hamster</option>
+            <option value="parrot">Parrot</option>
+            <option value="spider">Spider</option>
+            <option value="goldfish">Goldfish</option>
+          </select>
+        </label>
+
+        <label>
+          <div>Date</div>
+          <input type="date" name="date" />
+        </label>
+      </div>
 
       <div class="grid">
         <fieldset>
@@ -34,10 +51,12 @@ export const Example: StoryFn = (): HTMLElement => {
             <input type="checkbox" name="colors" value="red" />
             <span>Red</span>
           </label>
+
           <label>
             <input type="checkbox" name="colors" value="green" />
             <span>Green</span>
           </label>
+
           <label>
             <input type="checkbox" name="colors" value="blue" />
             <span>Blue</span>
@@ -51,6 +70,7 @@ export const Example: StoryFn = (): HTMLElement => {
             <input type="radio" name="yesOrNo" value="yes" />
             <span>Yes</span>
           </label>
+
           <label>
             <input type="radio" name="yesOrNo" value="no" />
             <span>No</span>
@@ -66,7 +86,7 @@ export const Example: StoryFn = (): HTMLElement => {
 
   if (!formElement) throw new Error("Form element not found.");
 
-  new Form(formElement, {
+  const form = new Form(formElement, {
     async onSubmit(form) {
       alert(JSON.stringify(form.data, null, 2));
     },
@@ -74,6 +94,8 @@ export const Example: StoryFn = (): HTMLElement => {
     onInvalid(form) {
       console.log(form.errors);
     },
+    
+    inputMapper: new InputMapper(),
 
     validator: {
       name: new Validator().required("This field is required."),
@@ -81,10 +103,13 @@ export const Example: StoryFn = (): HTMLElement => {
         .required("This field is required.")
         .email("Please use a valid email."),
       date: new Validator().required("This field is required."),
+      pet: new Validator().required("This field is required."),
       yesOrNo: new Validator().required("This field is required."),
       colors: new Validator().required("This field is required."),
     },
   });
+
+  console.log(form);
 
   return container;
 };
