@@ -14,11 +14,9 @@ declare global {
     }
 }
 
-const mnmo = {
+window.mnmo = {
     util,
     context,
     ...lib,
     ...components
-}
-
-window.mnmo = mnmo;
+};

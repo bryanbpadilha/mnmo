@@ -4,8 +4,8 @@
   "main": "./dist/index.min.js",
   "keywords": [],
   "author": {
-    "name" : "Bryan B Padilha",
-    "email" : "bryan@bryanbpadilha.com",
+    "name": "Bryan B Padilha",
+    "email": "bryan@bryanbpadilha.com",
     "url": "https://bryanbpadilha.com/"
   },
   "files": [
@@ -31,9 +31,7 @@
     "@types/validator": "^13.7.12",
     "babel-loader": "^8.3.0",
     "esbuild": "^0.17.6",
-    "typescript": "^4.9.5"
-  },
-  "dependencies": {
+    "typescript": "^4.9.5",
     "validator": "^13.9.0"
   }
 }
