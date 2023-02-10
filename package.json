@@ -1,7 +1,7 @@
 {
   "name": "mnmo",
   "version": "1.0.0",
-  "main": "./dist/index.js",
+  "main": "./dist/index.min.js",
   "keywords": [],
   "author": {
     "name" : "Bryan B Padilha",

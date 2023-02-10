@@ -1,20 +1,16 @@
 import * as esbuild from 'esbuild'
 
-// No bundle
+// No minify
 await esbuild.build({
-  entryPoints: [
-    'src/index.ts',
-    'src/components/index.ts',
-    'src/lib/index.ts',
-    'src/util/index.ts',
-  ],
-  bundle: false,
-  outdir: 'dist',
-  minify: true,
+  entryPoints: ['src/index.ts'],
+  bundle: true,
+  outfile: 'dist/index.js',
+  minify: false,
+  external: ['*.stories.ts', '*.stories.mdx'],
   target: "es2015",
 })
 
-// Bundle
+// Minify
 await esbuild.build({
   entryPoints: ['src/index.ts'],
   bundle: true,
