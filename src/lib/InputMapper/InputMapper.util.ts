@@ -34,40 +34,34 @@ const isTextbox = (element: Element) => {
 
 export const defaultInputMap: IInputMap = {
   InputCheckGroup(elements) {
-    const checkboxes = Array.from(elements).filter(
-      isCheck
-    ) as HTMLInputElement[];
+    const boxes = Array.from(elements).filter(isCheck) as HTMLInputElement[];
+    const groupedBoxes: HTMLInputElement[][] = [];
 
-    const checkGroups: InputCheckGroup[] = [];
-
-    for (const name of checkboxes.map((box) => box.name)) {
-      const sameNameBoxes = checkboxes.filter((box) => box.name === name);
-      checkGroups.push(new InputCheckGroup(sameNameBoxes, { name }));
+    for (const name of boxes.map((box) => box.name)) {
+      const sameNameBoxes = boxes.filter((box) => box.name === name);
+      groupedBoxes.push(sameNameBoxes);
     }
 
-    return checkGroups;
+    return groupedBoxes;
   },
 
   InputRadioGroup(elements) {
     const radios = Array.from(elements).filter(isRadio) as HTMLInputElement[];
-
-    const radioGroups: InputRadioGroup[] = [];
+    const radioGroups: HTMLInputElement[][] = [];
 
     for (const name of radios.map((radio) => radio.name)) {
       const sameNameRadios = radios.filter((radio) => radio.name === name);
-      radioGroups.push(new InputRadioGroup(sameNameRadios, { name }));
+      radioGroups.push(sameNameRadios);
     }
 
     return radioGroups;
   },
 
   InputSelect(elements) {
-    const inputs = Array.from(elements).filter(isSelect) as HTMLSelectElement[];
-    return inputs.map((input) => new InputSelect(input, { name: input.name }));
+    return Array.from(elements).filter(isSelect) as HTMLSelectElement[];
   },
 
   InputTextbox(elements) {
-    const inputs = Array.from(elements).filter(isTextbox) as HTMLInputElement[];
-    return inputs.map((input) => new InputTextbox(input, { name: input.name }));
+    return Array.from(elements).filter(isTextbox) as HTMLInputElement[];
   },
 };

@@ -1,6 +1,7 @@
 import { StoryFn, Meta } from "@storybook/html";
-import { Input } from "./Input";
-import { Validator } from "../../lib";
+import { InputTextbox } from "../InputTextbox";
+import { Constraint, InputMapper } from "../../lib";
+import { Form } from "../Form";
 
 export default {} as Meta;
 
@@ -8,31 +9,37 @@ export const Example: StoryFn = (): HTMLElement => {
   const container = document.createElement("div");
 
   container.innerHTML = /* html */ `
-    <label>
-      <span>Test</span>
-      <input type="text" name="test" />
-    </label> 
+    <form>
+      <label>
+        <span>Test</span>
+        <input name="test" />
+      </label> 
+    </form>
   `;
-
-  const input = new Input({
-    name: "test",
-
-    validator: new Validator().required("This field is required."),
-
-    onInvalid(input) {
-      console.log(`Error on input [${input.name}]: ${input.error}`);
-    },
-
-    onChange(input) {
-      console.log(input.value);
-    },
-  });
 
   const inputElement = container.querySelector<HTMLInputElement>("[name='test']");
 
-  inputElement?.addEventListener("input", () => {
-    input.value = inputElement.value;
-  });
+  const formElement = container.querySelector<HTMLFormElement>('form');
 
+  if (!formElement) throw new Error('Form element not found');
+
+  if (!inputElement) throw new Error('Input element not found');
+
+  new Form(formElement, {
+    inputMapper: new InputMapper({
+      constraint: {
+        test: new Constraint().required('This field is required')
+      },
+    }),
+
+    async onSubmit(form) {
+      console.log(form)
+    },
+
+    onInvalid(form) {
+      console.log(form)
+    }
+  })
+  
   return container;
 };

@@ -1,8 +1,12 @@
 import { Form } from "../Form";
 import { Validator } from "../../lib/Validator";
+import { Constraint } from "../../lib";
+
+export type TInputEvents = ['constraintChanged'];
 
 export interface IInputProps {
   name: string;
+  constraint?: Constraint;
   validator?: Validator;
   onChange?: (input: Input) => void;
   onInvalid?: (input: Input) => void;
@@ -16,12 +20,14 @@ export class Input implements IInputProps {
   protected _value: any;
   protected _error: null | string;
   readonly name: IInputProps['name'];
+  readonly constraint: IInputProps["constraint"];
   validator: IInputProps["validator"];
   onChange?: IInputProps["onChange"];
   onInvalid?: IInputProps["onInvalid"];
 
   constructor(props: IInputProps) {
     this.name = props.name;
+    this.constraint = props?.constraint;
     this.validator = props?.validator;
     this.onChange = props?.onChange;
     this.onInvalid = props?.onInvalid;
@@ -32,21 +38,29 @@ export class Input implements IInputProps {
 
   validate() {
     try {
-      this.validator?.validate(this.value, this.form?.data);
-      this.error = null;
-      this.isValid = true;
+      this.constraint?.validate(this.value, this.form?.data);
+      this.handleValid();
     } catch (error: any) {
-      this.error = error.message as string;
-      this.isValid = false;
-
-      if (!this.onInvalid) return;
-
-      if (this.form) {
-        if (this.form.triedSubmitting) this.onInvalid(this);
-      } else {
-        this.onInvalid(this);
-      }
+      this.handleInvalid(error.message as string);
     }
+  }
+
+  handleInvalid(errorMessage: string) {
+    this.error = errorMessage;
+    this.isValid = false;
+
+    if (!this.onInvalid) return;
+
+    if (this.form) {
+      if (this.form.triedSubmitting) this.onInvalid(this);
+    } else {
+      this.onInvalid(this);
+    }
+  }
+
+  handleValid() {
+    this.error = null;
+    this.isValid = true;
   }
 
   set value(_value) {
@@ -71,16 +85,7 @@ export class Input implements IInputProps {
     this._isValid = _isValid;
   }
 
-  get isValid(): boolean {
-    if (this._isValid !== null) return this._isValid;
-
-    try {
-      this.validator?.validate(this.value, this.form?.data);
-      this.isValid = true;
-      return this.isValid;
-    } catch (error) {
-      this.isValid = false;
-      return this.isValid;
-    }
+  get isValid() {
+    return this._isValid !== null ? this._isValid : true;
   }
 }

@@ -1,13 +1,10 @@
 import { Input } from "..";
-import { createInputs } from "./Form.util";
-import { Validator } from "../../lib";
-import { InputMapper } from "../../lib/InputMapper/InputMapper";
+import { InputMapper } from "../../lib";
 
 export interface IFormProps {
   onSubmit?: (form: Form) => Promise<void>;
   onChange?: (form: Form) => void;
   onInvalid?: (form: Form) => void;
-  validator?: { [key: string]: Validator }
   inputMapper?: InputMapper,
 }
 
@@ -17,7 +14,6 @@ export class Form {
   readonly onSubmit?: IFormProps['onSubmit'];
   readonly onChange?: IFormProps['onChange'];
   readonly onInvalid?: IFormProps['onInvalid'];
-  readonly validator?: IFormProps['validator'];
   readonly inputMapper?: IFormProps['inputMapper'];
 
   // State
@@ -32,13 +28,10 @@ export class Form {
     this.onSubmit = props?.onSubmit;
     this.onChange = props?.onChange;
     this.onInvalid = props?.onInvalid;
-    this.validator = props?.validator;
     this.inputMapper = props?.inputMapper;
 
     this.triedSubmitting = false;
     this.isSubmitting = false;
-
-    this.element.setAttribute('novalidate', '');
 
     this.element.addEventListener("submit", (event) => {
       this.handleSubmit(event);
@@ -84,12 +77,7 @@ export class Form {
 
   append(...inputs: Input[]) {
     for (const input of inputs) {
-      if (this.validator && this.validator[input.name]) {
-        input.validator = this.validator[input.name];
-      }
-
       this.inputs = this.inputs ? [...this.inputs, input] : [input];
-      input.form = this;
     }
   }
 
