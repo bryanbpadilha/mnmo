@@ -2,11 +2,9 @@
 // TODO: Figure out how context should work (reducer-like, maybe?)
 
 import * as components from './components';
-import * as context from './context';
-import * as lib from './lib';
 import * as util from './util';
 
-export default { ...components, ...lib, util, context };
+export default { ...components, util };
 
 declare global {
     interface Window {
@@ -16,7 +14,5 @@ declare global {
 
 window.mnmo = {
     util,
-    context,
-    ...lib,
     ...components
 };
