@@ -149,6 +149,14 @@ export class Textbox {
     return this.element.reportValidity();
   }
 
+  get error() {
+    return this.element.validationMessage;
+  }
+
+  get name() {
+    return this.element.name;
+  }
+
   get value() {
     return this.element.value;
   }
