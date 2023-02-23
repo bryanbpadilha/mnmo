@@ -1,49 +1,48 @@
-const CONSTRAINTS = [
-  "required",
-  "step",
-  "min",
-  "max",
-  "minLength",
-  "maxLength",
-  "pattern",
-] as const;
+import { Input, TInputConstraintEntry, TInputEvent } from "../Input";
 
-export type TTextboxConstraintEntry<T> =
-  | T
-  | {
-      value: T;
-      message: string;
-    };
+const ERRORS = [
+  ["valueMissing", "required"],
+  ["badInput"],
+  ["typeMismatch"],
+  ["patternMismatch", "pattern"],
+  ["rangeOverflow", "max"],
+  ["rangeUnderflow", "min"],
+  ["stepMismatch", "step"],
+  ["tooLong", "maxLength"],
+  ["tooShort", "minLength"],
+];
 
-export type TTextboxEvent = (textbox: Textbox) => void;
+const CONSTRAINTS = ERRORS.map(([errorName, constraintName]) => constraintName);
 
 export interface ITextboxConfig {
-  onChange?: TTextboxEvent;
-  onInvalid?: TTextboxEvent;
+  onChange?: TInputEvent<Textbox>;
+  onInvalid?: TInputEvent<Textbox>;
   // Constraints
   validationMessage?: string;
-  required?: TTextboxConstraintEntry<true>;
-  step?: TTextboxConstraintEntry<number>;
-  min?: TTextboxConstraintEntry<number | string>;
-  max?: TTextboxConstraintEntry<number | string>;
-  minLength?: TTextboxConstraintEntry<number>;
-  maxLength?: TTextboxConstraintEntry<number>;
-  pattern?: TTextboxConstraintEntry<number>;
-  validate?: TTextboxConstraintEntry<
+  required?: TInputConstraintEntry<true>;
+  step?: TInputConstraintEntry<number>;
+  min?: TInputConstraintEntry<number | string>;
+  max?: TInputConstraintEntry<number | string>;
+  minLength?: TInputConstraintEntry<number>;
+  maxLength?: TInputConstraintEntry<number>;
+  pattern?: TInputConstraintEntry<number>;
+  validate?: TInputConstraintEntry<
     (textbox: Textbox, context?: unknown) => boolean
   >;
 }
 
 // TODO: implement the custom validate() function
-export class Textbox {
+export class Textbox extends Input {
   element: HTMLInputElement;
   config?: ITextboxConfig;
 
   constructor(element: HTMLInputElement, config?: ITextboxConfig) {
+    super();
+
     this.element = element;
     this.config = config;
 
-    this.syncConstraints();
+    this.syncConstraints(CONSTRAINTS);
 
     this.element.addEventListener("invalid", () => {
       this.handleInvalid();
@@ -60,94 +59,26 @@ export class Textbox {
     }
   }
 
-  private syncConstraintEntry(key: typeof CONSTRAINTS[number]) {
-    if (this.config && this.config[key]) {
-      const constraint = this.config[key];
-
-      let constraintValue: boolean | string | number;
-      let constraintMessage: string | undefined;
-
-      if (typeof constraint === "object") {
-        constraintValue = constraint.value;
-        constraintMessage = constraint.message;
-      } else {
-        constraintValue = this.config[key] as boolean | string | number;
-      }
-
-      this.element.setAttribute(key, String(constraintValue));
-      if (constraintMessage) this.element.setAttribute(`${key}-message`, constraintMessage);
-    }
-  }
-
-  private syncConstraints() {
-    const constraints = CONSTRAINTS;
-    constraints.forEach((key) => this.syncConstraintEntry(key));
-  }
-
   private handleChange() {
-    this.validate();
+    this.validate(this.validityError);
     this.emit("onChange");
   }
 
   private handleInvalid() {
-    this.validate();
+    this.validate(this.validityError);
     this.emit("onInvalid");
   }
 
-  private getDefaultValidationMessage() {
-    return (
-      this.config?.validationMessage ??
-      this.element.getAttribute("validation-message") ??
-      this.element.validationMessage
-    );
+  get validityError() {
+    return ERRORS.filter(([error]) => this.validity[error])[0];
   }
 
-  private getCustomValidationMessage(key?: typeof CONSTRAINTS[number]) {
-    const customMessage = this.element.getAttribute(`${key}-message`);
-
-    if (!key || !customMessage) {
-      return this.getDefaultValidationMessage();
-    }
-
-    return customMessage;
+  get constraints() {
+    return this.config;
   }
 
-  validate() {
-    const errors = [
-      ["valueMissing", "required"],
-      ["badInput"],
-      ["typeMismatch"],
-      ["patternMismatch", "pattern"],
-      ["rangeOverflow", "max"],
-      ["rangeUnderflow", "min"],
-      ["stepMismatch", "step"],
-      ["tooLong", "maxLength"],
-      ["tooShort", "minLength"],
-    ]
-
-    const error = errors.filter(([error]) => this.validity[error])[0];
-
-    if (error) {
-      const [errorName, constraint] = error;
-      const message = this.getCustomValidationMessage(constraint as typeof CONSTRAINTS[number]);
-      this.setCustomValidity(message);
-    } else {
-      this.setCustomValidity("");
-    }
-  }
-
-  setCustomValidity(validity: string) {
-    this.element.setCustomValidity(validity);
-  }
-
-  checkValidity() {
-    this.validate();
-    return this.element.checkValidity();
-  }
-
-  reportValidity() {
-    this.validate();
-    return this.element.reportValidity();
+  get elements() {
+    return [this.element];
   }
 
   get error() {
