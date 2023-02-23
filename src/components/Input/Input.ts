@@ -8,8 +8,6 @@ export type TInputConstraintEntry<T> =
     };
 
 export class Input {
-  multiple?: boolean;
-
   protected syncConstraintEntry(key: string) {
     if (this.constraints && this.constraints[key]) {
       const constraint = this.constraints[key];

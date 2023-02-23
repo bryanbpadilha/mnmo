@@ -1,31 +1,28 @@
-const CONSTRAINTS = ["required"] as const;
+import { Input, TInputConstraintEntry, TInputEvent } from "../Input";
+    
+const ERRORS = [["valueMissing", "required"]];
 
-export type TRadioGroupConstraintEntry<T> =
-  | T
-  | {
-      value: T;
-      message: string;
-    };
-
-export type TRadioGroupEvent = (radioGroup: RadioGroup) => void;
+const CONSTRAINTS = ERRORS.map(([errorName, constraintName]) => constraintName);
 
 export interface IRadioGroupConfig {
-  onChange?: TRadioGroupEvent;
-  onInvalid?: TRadioGroupEvent;
+  onChange?: TInputEvent<RadioGroup>;
+  onInvalid?: TInputEvent<RadioGroup>;
   // Constraints
   validationMessage?: string;
-  required?: TRadioGroupConstraintEntry<true>;
-  validate?: TRadioGroupConstraintEntry<
+  required?: TInputConstraintEntry<true>;
+  validate?: TInputConstraintEntry<
     (radioGroup: RadioGroup, context?: unknown) => boolean
   >;
 }
 
-export class RadioGroup {
+export class RadioGroup extends Input {
   groupNode: HTMLElement;
   radioButtons: HTMLInputElement[];
   config?: IRadioGroupConfig;
 
   constructor(groupNode: HTMLElement, config?: IRadioGroupConfig) {
+    super();
+
     this.groupNode = groupNode;
     this.config = config;
 
@@ -33,7 +30,7 @@ export class RadioGroup {
       this.groupNode.querySelectorAll<HTMLInputElement>("input[type=radio]")
     );
 
-    this.syncConstraints();
+    this.syncConstraints(CONSTRAINTS);
 
     Array.from(this.radioButtons).forEach((button) =>
       button.addEventListener("invalid", () => {
@@ -55,94 +52,21 @@ export class RadioGroup {
   }
 
   private handleChange() {
-    this.validate();
+    this.validate(this.validityError);
     this.emit("onChange");
   }
 
   private handleInvalid() {
-    this.validate();
+    this.validate(this.validityError);
     this.emit("onInvalid");
   }
 
-  private syncConstraintEntry(key: typeof CONSTRAINTS[number]) {
-    if (this.config && this.config[key]) {
-      const constraint = this.config[key];
-
-      let constraintValue: boolean | string | number;
-      let constraintMessage: string | undefined;
-
-      if (typeof constraint === "object") {
-        constraintValue = constraint.value;
-        constraintMessage = constraint.message;
-      } else {
-        constraintValue = this.config[key] as boolean | string | number;
-      }
-
-      for (const element of this.radioButtons) {
-        element.setAttribute(key, String(constraintValue));
-      }
-
-      if (constraintMessage) {
-        for (const element of this.radioButtons) {
-          element.setAttribute(`${key}-message`, constraintMessage);
-        }
-      }
-    }
+  get elements() {
+    return this.radioButtons;
   }
-
-  private syncConstraints() {
-    const constraints = CONSTRAINTS;
-    constraints.forEach((key) => this.syncConstraintEntry(key));
-  }
-
-  private getDefaultValidationMessage() {
-    return (
-      this.config?.validationMessage ??
-      this.radioButtons[0].getAttribute("validation-message") ??
-      this.radioButtons[0].validationMessage
-    );
-  }
-
-  private getCustomValidationMessage(key?: typeof CONSTRAINTS[number]) {
-    const customMessage = this.radioButtons[0].getAttribute(`${key}-message`);
-
-    if (!key || !customMessage) {
-      return this.getDefaultValidationMessage();
-    }
-
-    return customMessage;
-  }
-
-  validate() {
-    const errors = [["valueMissing", "required"]];
-
-    const error = errors.filter(([error]) => this.validity[error])[0];
-
-    if (error) {
-      const [errorName, constraint] = error;
-      const message = this.getCustomValidationMessage(
-        constraint as typeof CONSTRAINTS[number]
-      );
-      this.setCustomValidity(message);
-    } else {
-      this.setCustomValidity("");
-    }
-  }
-
-  setCustomValidity(validity: string) {
-    for (const element of this.radioButtons) {
-      element.setCustomValidity(validity);
-    }
-  }
-
-  checkValidity() {
-    this.validate();
-    return this.radioButtons[0].checkValidity();
-  }
-
-  reportValidity() {
-    this.validate();
-    return this.radioButtons[0].reportValidity();
+  
+  get validityError() {
+    return ERRORS.filter(([error]) => this.validity[error])[0];
   }
 
   get checked(): HTMLInputElement | undefined {
