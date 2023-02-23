@@ -14,6 +14,7 @@
   "license": "ISC",
   "description": "Headless UI in vanilla JS",
   "scripts": {
+    "test": "node test.mjs",
     "build": "rm -rf ./dist && node esbuild.mjs",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
