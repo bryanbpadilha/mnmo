@@ -1,6 +1,10 @@
 import { Input, TInputConstraintEntry, TInputEvent } from "../Input";
 
-const ERRORS = [["valueMissing", "required"]];
+const ERRORS = [
+  ["valueMissing", "required"],
+  ["badInput"],
+  ["typeMismatch"],
+];
 
 const CONSTRAINTS = ERRORS.map(([errorName, constraintName]) => constraintName);
 

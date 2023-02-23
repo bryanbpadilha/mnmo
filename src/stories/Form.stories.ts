@@ -1,5 +1,6 @@
 import { StoryFn, Meta } from "@storybook/html";
 import { Form, CheckboxGroup, Textbox } from "../components";
+import { Select } from "../components/Select/Select";
 
 export default {} as Meta;
 
@@ -11,6 +12,19 @@ export const Example: StoryFn = (): HTMLElement => {
       <label>
         <div>Email</div>
         <input name="email" type="email" required />
+      </label>
+      
+      <label>
+        <div>Animal</div>
+        <select name="animal" required>
+          <option value="">Select...</option>
+          <option value="dog">Dog</option>
+          <option value="cat">Cat</option>
+          <option value="hamster">Hamster</option>
+          <option value="parrot">Parrot</option>
+          <option value="spider">Spider</option>
+          <option value="goldfish">Goldfish</option>        
+        </select>
       </label>
 
       <fieldset id="colors">
@@ -47,13 +61,20 @@ export const Example: StoryFn = (): HTMLElement => {
     }
   );
 
+  const animal = new Select(
+    container.querySelector("[name=animal]") as HTMLSelectElement,
+    {
+      validationMessage: "Please select an animal.",
+    }
+  );
+
   const form = new Form(container.querySelector("form") as HTMLFormElement, {
     async onSubmit(form) {
       console.log("submit", form.values);
     },
   });
 
-  form.append(textbox, colors);
+  form.append(textbox, animal, colors);
 
   return container;
 };

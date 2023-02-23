@@ -90,7 +90,7 @@ export class Input {
     return;
   }
 
-  get elements(): HTMLInputElement[] {
+  get elements(): (HTMLInputElement | HTMLSelectElement)[] {
     return [];
   }
 
