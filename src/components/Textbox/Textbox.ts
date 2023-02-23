@@ -34,6 +34,7 @@ export interface ITextboxConfig {
   >;
 }
 
+// TODO: implement the custom validate() function
 export class Textbox {
   element: HTMLInputElement;
   config?: ITextboxConfig;

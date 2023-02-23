@@ -1,3 +1,4 @@
+import { RadioGroup } from "../RadioGroup";
 import { Textbox } from "../Textbox";
 
 export type TFormEvent = (form: Form) => void;
@@ -13,7 +14,7 @@ export interface IFormConfig {
 export class Form {
   element: HTMLFormElement;
   config?: IFormConfig;
-  inputs?: Textbox[];
+  inputs?: (Textbox | RadioGroup)[];
 
   isDirty: boolean;
   isSubmitted: boolean;
@@ -85,7 +86,7 @@ export class Form {
     }
   }
 
-  append(...inputs: Textbox[]) {
+  append(...inputs: (Textbox | RadioGroup)[]) {
     if (this.inputs) {
       this.inputs = this.inputs.concat(inputs);
     } else {
@@ -96,14 +97,6 @@ export class Form {
   get errors() {
     let errors: { [key: string]: string } = {};
 
-    if (this.inputs) {
-      for (const input of this.inputs) {
-        errors[input.name] = input.error;
-      }
-
-      return errors;
-    }
-
     const invalidElements = Array.from(this.elements).filter(
       (element) => !(element as HTMLInputElement).validity.valid
     ) as HTMLInputElement[];
@@ -112,19 +105,17 @@ export class Form {
       errors[input.name] = input.validationMessage;
     }
 
+    if (this.inputs) {
+      for (const input of this.inputs) {
+        errors[input.name] = input.error;
+      }
+    }
+
     return errors;
   }
 
   get values() {
     let values: { [key: string]: any | any[] } = {};
-
-    if (this.inputs) {
-      for (const input of this.inputs) {
-        values[input.name] = input.value;
-      }
-
-      return values;
-    }
 
     const inputs = Array.from(this.elements).filter(
       (element) =>
@@ -139,6 +130,12 @@ export class Form {
         values[name] = Array.from(this.data.getAll(name));
       } else {
         values[name] = this.data.get(name);
+      }
+    }
+
+    if (this.inputs) {
+      for (const input of this.inputs) {
+        values[input.name] = input.value;
       }
     }
 

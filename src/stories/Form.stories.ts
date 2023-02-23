@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from "@storybook/html";
-import { Form, Textbox } from "../components";
+import { Form, RadioGroup, Textbox } from "../components";
 
 export default {} as Meta;
 
@@ -13,33 +13,21 @@ export const Example: StoryFn = (): HTMLElement => {
         <input name="email" type="email" required />
       </label>
 
-      <label>
-        <div>Images</div>
-        <input name="images" type="file" multiple required />
-      </label>
-
-      <fieldset>
+      <fieldset id="colors">
         <legend>Colors</legend>
         <label>
-          <input type="checkbox" name="colors" value="red" />
+          <input type="radio" name="colors" value="red" required />
           <span>Red</span>
         </label>
         <label>
-          <input type="checkbox" name="colors" value="green" />
+          <input type="radio" name="colors" value="green" required />
           <span>Green</span>
         </label>
         <label>
-          <input type="checkbox" name="colors" value="blue" />
+          <input type="radio" name="colors" value="blue" required />
           <span>Blue</span>
         </label>
       </fieldset>
-
-      <p>
-        <label>
-          <input type="radio" name="terms" required />
-          <span>Terms of Condition</span>
-        </label>
-      </p>
 
       <button type="submit">Submit</button>
     </form>
@@ -52,11 +40,20 @@ export const Example: StoryFn = (): HTMLElement => {
     }
   );
 
+  const colors = new RadioGroup(
+    container.querySelector("#colors") as HTMLElement,
+    {
+      validationMessage: "Please select a color.",
+    }
+  );
+
   const form = new Form(container.querySelector("form") as HTMLFormElement, {
     async onSubmit(form) {
       console.log("submit", form.values);
     },
   });
+
+  form.append(textbox, colors);
 
   return container;
 };
