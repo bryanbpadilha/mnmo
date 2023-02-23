@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from "@storybook/html";
-import { Form, RadioGroup, Textbox } from "../components";
+import { Form, CheckboxGroup, Textbox } from "../components";
 
 export default {} as Meta;
 
@@ -16,15 +16,15 @@ export const Example: StoryFn = (): HTMLElement => {
       <fieldset id="colors">
         <legend>Colors</legend>
         <label>
-          <input type="radio" name="colors" value="red" required />
+          <input type="checkbox" name="colors" value="red" required />
           <span>Red</span>
         </label>
         <label>
-          <input type="radio" name="colors" value="green" required />
+          <input type="checkbox" name="colors" value="green" />
           <span>Green</span>
         </label>
         <label>
-          <input type="radio" name="colors" value="blue" required />
+          <input type="checkbox" name="colors" value="blue" />
           <span>Blue</span>
         </label>
       </fieldset>
@@ -40,7 +40,7 @@ export const Example: StoryFn = (): HTMLElement => {
     }
   );
 
-  const colors = new RadioGroup(
+  const colors = new CheckboxGroup(
     container.querySelector("#colors") as HTMLElement,
     {
       validationMessage: "Please select a color.",

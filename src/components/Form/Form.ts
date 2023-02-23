@@ -1,5 +1,4 @@
-import { RadioGroup } from "../RadioGroup";
-import { Textbox } from "../Textbox";
+import { Input } from "..";
 
 export type TFormEvent = (form: Form) => void;
 export type TFormSubmitEvent = (form: Form) => Promise<void>;
@@ -14,7 +13,7 @@ export interface IFormConfig {
 export class Form {
   element: HTMLFormElement;
   config?: IFormConfig;
-  inputs?: (Textbox | RadioGroup)[];
+  inputs?: Input[];
 
   isDirty: boolean;
   isSubmitted: boolean;
@@ -86,7 +85,7 @@ export class Form {
     }
   }
 
-  append(...inputs: (Textbox | RadioGroup)[]) {
+  append(...inputs: Input[]) {
     if (this.inputs) {
       this.inputs = this.inputs.concat(inputs);
     } else {

@@ -1,44 +1,44 @@
 import { Input, TInputConstraintEntry, TInputEvent } from "../Input";
-    
+
 const ERRORS = [["valueMissing", "required"]];
 
 const CONSTRAINTS = ERRORS.map(([errorName, constraintName]) => constraintName);
 
-export interface IRadioGroupConfig {
-  onChange?: TInputEvent<RadioGroup>;
-  onInvalid?: TInputEvent<RadioGroup>;
+export interface ICheckboxGroupConfig {
+  onChange?: TInputEvent<CheckboxGroup>;
+  onInvalid?: TInputEvent<CheckboxGroup>;
   // Constraints
   validationMessage?: string;
   required?: TInputConstraintEntry<true>;
   validate?: TInputConstraintEntry<
-    (radioGroup: RadioGroup, context?: unknown) => boolean
+    (checkboxGroup: CheckboxGroup, context?: unknown) => boolean
   >;
 }
 
-export class RadioGroup extends Input {
+export class CheckboxGroup extends Input {
   groupNode: HTMLElement;
-  radioButtons: HTMLInputElement[];
-  config?: IRadioGroupConfig;
+  checkboxes: HTMLInputElement[];
+  config?: ICheckboxGroupConfig;
 
-  constructor(groupNode: HTMLElement, config?: IRadioGroupConfig) {
+  constructor(groupNode: HTMLElement, config?: ICheckboxGroupConfig) {
     super();
 
     this.groupNode = groupNode;
     this.config = config;
 
-    this.radioButtons = Array.from(
-      this.groupNode.querySelectorAll<HTMLInputElement>("input[type=radio]")
+    this.checkboxes = Array.from(
+      this.groupNode.querySelectorAll<HTMLInputElement>("input[type=checkbox]")
     );
 
     this.syncConstraints(CONSTRAINTS);
 
-    Array.from(this.radioButtons).forEach((button) =>
+    Array.from(this.checkboxes).forEach((button) =>
       button.addEventListener("invalid", () => {
         this.handleInvalid();
       })
     );
 
-    Array.from(this.radioButtons).forEach((button) =>
+    Array.from(this.checkboxes).forEach((button) =>
       button.addEventListener("input", () => {
         this.handleChange();
       })
@@ -62,34 +62,34 @@ export class RadioGroup extends Input {
   }
 
   get elements() {
-    return this.radioButtons;
+    return this.checkboxes;
   }
 
   get defaultValidationMessage() {
     return this.config?.validationMessage;
   }
-  
+
   get validityError() {
     return ERRORS.filter(([error]) => this.validity[error])[0];
   }
 
-  get checked(): HTMLInputElement | undefined {
-    return this.radioButtons.filter((button) => button.checked)[0];
+  get checked(): HTMLInputElement[] | undefined {
+    return this.checkboxes.filter((button) => button.checked);
   }
 
   get error() {
-    return this.radioButtons[0].validationMessage;
+    return this.checkboxes[0].validationMessage;
   }
 
   get name() {
-    return this.radioButtons[0].name;
+    return this.checkboxes[0].name;
   }
 
   get value() {
-    return this.checked ? this.checked.value : null;
+    return this.checked ? this.checked.map((element) => element.value) : null;
   }
 
   get validity() {
-    return this.radioButtons[0].validity;
+    return this.checkboxes[0].validity;
   }
 }

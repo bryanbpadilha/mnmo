@@ -69,6 +69,10 @@ export class Textbox extends Input {
     this.emit("onInvalid");
   }
 
+  get defaultValidationMessage() {
+    return this.config?.validationMessage;
+  }
+
   get validityError() {
     return ERRORS.filter(([error]) => this.validity[error])[0];
   }
