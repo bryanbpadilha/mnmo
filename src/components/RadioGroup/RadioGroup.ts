@@ -20,18 +20,18 @@ export interface IRadioGroupConfig {
 }
 
 export class RadioGroup extends Input {
-  groupNode: HTMLElement;
+  element: HTMLElement;
   radioButtons: HTMLInputElement[];
   config?: IRadioGroupConfig;
 
-  constructor(groupNode: HTMLElement, config?: IRadioGroupConfig) {
+  constructor(element: HTMLElement, config?: IRadioGroupConfig) {
     super();
 
-    this.groupNode = groupNode;
+    this.element = element;
     this.config = config;
 
     this.radioButtons = Array.from(
-      this.groupNode.querySelectorAll<HTMLInputElement>("input[type=radio]")
+      this.element.querySelectorAll<HTMLInputElement>("input[type=radio]")
     );
 
     this.syncConstraints(CONSTRAINTS);

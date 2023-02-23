@@ -20,18 +20,18 @@ export interface ICheckboxGroupConfig {
 }
 
 export class CheckboxGroup extends Input {
-  groupNode: HTMLElement;
+  element: HTMLElement;
   checkboxes: HTMLInputElement[];
   config?: ICheckboxGroupConfig;
 
-  constructor(groupNode: HTMLElement, config?: ICheckboxGroupConfig) {
+  constructor(element: HTMLElement, config?: ICheckboxGroupConfig) {
     super();
 
-    this.groupNode = groupNode;
+    this.element = element;
     this.config = config;
 
     this.checkboxes = Array.from(
-      this.groupNode.querySelectorAll<HTMLInputElement>("input[type=checkbox]")
+      this.element.querySelectorAll<HTMLInputElement>("input[type=checkbox]")
     );
 
     this.syncConstraints(CONSTRAINTS);

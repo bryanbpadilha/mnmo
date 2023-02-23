@@ -1,6 +1,5 @@
 import { StoryFn, Meta } from "@storybook/html";
-import { Form, CheckboxGroup, Textbox } from "../components";
-import { Select } from "../components/Select/Select";
+import { Form, CheckboxGroup, Textbox, Select } from "../components";
 
 export default {} as Meta;
 
