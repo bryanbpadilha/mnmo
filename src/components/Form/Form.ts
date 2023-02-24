@@ -122,10 +122,13 @@ export class Form {
           .name
     ) as (HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement)[];
 
+
     for (const input of inputs) {
       const { name } = input;
+    
+      const isMultipleCheckbox = input.type == 'checkbox' && inputs.map((input) => input.name).filter((item) => item === name).length > 1;
 
-      if (input.type === "checkbox" || (input as HTMLInputElement).multiple) {
+      if (isMultipleCheckbox || (input as HTMLInputElement).multiple) {
         values[name] = Array.from(this.data.getAll(name));
       } else {
         values[name] = this.data.get(name);
