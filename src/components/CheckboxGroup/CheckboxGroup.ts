@@ -90,7 +90,11 @@ export class CheckboxGroup extends Input {
   }
 
   get value() {
-    return this.checked ? this.checked.map((element) => element.value) : null;
+    if (this.checkboxes.length > 1) {
+      return this.checked ? this.checked.map((element) => element.value) : null;
+    } else {
+      return this.checked ? this.checked[0].value : null;
+    }
   }
 
   get validity() {
