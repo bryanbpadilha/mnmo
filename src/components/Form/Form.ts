@@ -86,10 +86,14 @@ export class Form {
   }
 
   append(...inputs: Input[]) {
-    if (this.inputs) {
-      this.inputs = this.inputs.concat(inputs);
-    } else {
-      this.inputs = inputs;
+    for (const input of inputs) {
+      if (input.form) {
+        throw new Error('An input can not be in two forms.')
+      }
+
+      input.form = this;
+
+      this.inputs = this.inputs?.concat(input) ?? [input];
     }
   }
 

@@ -29,7 +29,7 @@ export const Example: StoryFn = (): HTMLElement => {
       <fieldset id="colors">
         <legend>Colors</legend>
         <label>
-          <input type="checkbox" name="colors" value="red" required />
+          <input type="checkbox" name="colors" value="red" />
           <span>Red</span>
         </label>
         <label>
@@ -74,6 +74,8 @@ export const Example: StoryFn = (): HTMLElement => {
   });
 
   form.append(textbox, animal, colors);
+
+  console.log(form);
 
   return container;
 };

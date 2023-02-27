@@ -1,3 +1,5 @@
+import { Form } from '..';
+
 export type TInputConstraints = Array<
   [
     "required",
@@ -40,6 +42,7 @@ export interface IInputProperties {
 export class Input {
   config?: Record<string, any>;
   supportedConstraints: IInputProperties['supportedConstraints'];
+  form?: Form;
 
   isTouched: boolean;
 
