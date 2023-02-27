@@ -46,6 +46,7 @@ export class Input {
   constructor(config: IInputConfig) {
     this.constraints = config.constraints;
     this.syncConstraints();
+    this.isTouched = false;
   }
 
   protected emit(event: string) {
@@ -55,6 +56,7 @@ export class Input {
   }
 
   protected handleChange() {
+    this.isTouched = true;
     this.validate(this.validityError);
     this.emit("onChange");
   }
