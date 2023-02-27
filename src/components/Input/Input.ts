@@ -1,4 +1,6 @@
-import { Form } from '..';
+import { Form } from "..";
+
+export type TInputDynamicValidity = (value: any, context: unknown) => string;
 
 export type TInputConstraints = Array<
   [
@@ -41,7 +43,7 @@ export interface IInputProperties {
 
 export class Input {
   config?: Record<string, any>;
-  supportedConstraints: IInputProperties['supportedConstraints'];
+  supportedConstraints: IInputProperties["supportedConstraints"];
   form?: Form;
 
   isTouched: boolean;
@@ -59,12 +61,12 @@ export class Input {
 
   protected handleChange() {
     this.isTouched = true;
-    this.validate(this.validityError);
+    this.validate();
     this.emit("onChange");
   }
 
   protected handleInvalid() {
-    this.validate(this.validityError);
+    this.validate();
     this.emit("onInvalid");
   }
 
@@ -116,9 +118,11 @@ export class Input {
     return customMessage;
   }
 
-  validate(error?: string[]) {
-    if (error) {
-      const [errorName, constraint] = error;
+  validate() {
+    if (this.dynamicValidity && this.dynamicValidity.length > 0) {
+      this.setCustomValidity(this.dynamicValidity);
+    } else if (this.validityError) {
+      const [errorName, constraint] = this.validityError;
       const message = this.getCustomValidationMessage(constraint);
       this.setCustomValidity(message);
     } else {
@@ -140,6 +144,11 @@ export class Input {
   reportValidity() {
     this.validate();
     return this.elements.every((element) => element.reportValidity());
+  }
+
+  get dynamicValidity(): string | undefined {
+    const validityFn = this.config?.dynamicValidity;
+    return validityFn && validityFn(this.value, this.form?.values);
   }
 
   get defaultValidationMessage(): string | undefined {

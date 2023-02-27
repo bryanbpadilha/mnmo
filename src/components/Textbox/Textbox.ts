@@ -1,4 +1,4 @@
-import { Input, TInputConstraintEntry, TInputEvent } from "../Input";
+import { Input, TInputConstraintEntry, TInputDynamicValidity, TInputEvent } from "../Input";
 
 const ERRORS = [
   ["valueMissing", "required"],
@@ -26,9 +26,7 @@ export interface ITextboxConfig {
   minLength?: TInputConstraintEntry<number>;
   maxLength?: TInputConstraintEntry<number>;
   pattern?: TInputConstraintEntry<number>;
-  validate?: TInputConstraintEntry<
-    (textbox: Textbox, context?: unknown) => boolean
-  >;
+  dynamicValidity?: TInputDynamicValidity;
 }
 
 // TODO: implement the custom validate() function

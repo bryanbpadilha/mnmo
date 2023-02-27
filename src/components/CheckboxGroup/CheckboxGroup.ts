@@ -1,4 +1,4 @@
-import { Input, TInputConstraintEntry, TInputEvent } from "../Input";
+import { Input, TInputConstraintEntry, TInputDynamicValidity, TInputEvent } from "../Input";
 
 const ERRORS = [["valueMissing", "required"], ["badInput"], ["typeMismatch"]];
 
@@ -10,9 +10,7 @@ export interface ICheckboxGroupConfig {
   // Constraints
   validationMessage?: string;
   required?: TInputConstraintEntry<true>;
-  validate?: TInputConstraintEntry<
-    (checkboxGroup: CheckboxGroup, context?: unknown) => boolean
-  >;
+  dynamicValidity?: TInputDynamicValidity;
 }
 
 export class CheckboxGroup extends Input {

@@ -1,4 +1,4 @@
-import { Input, TInputConstraintEntry, TInputEvent } from "../Input";
+import { Input, TInputConstraintEntry, TInputDynamicValidity, TInputEvent } from "../Input";
     
 const ERRORS = [
   ["valueMissing", "required"],
@@ -14,9 +14,7 @@ export interface IRadioGroupConfig {
   // Constraints
   validationMessage?: string;
   required?: TInputConstraintEntry<true>;
-  validate?: TInputConstraintEntry<
-    (radioGroup: RadioGroup, context?: unknown) => boolean
-  >;
+  dynamicValidity?: TInputDynamicValidity;
 }
 
 export class RadioGroup extends Input {

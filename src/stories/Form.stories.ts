@@ -56,7 +56,10 @@ export const Example: StoryFn = (): HTMLElement => {
   const colors = new CheckboxGroup(
     container.querySelector("#colors") as HTMLElement,
     {
-      validationMessage: "Please select a color.",
+      dynamicValidity: (value, context) => {
+        if ((context as any).animal == "dog") return "Cannot choose dog.";
+        return "";
+      },
     }
   );
 

@@ -56,6 +56,7 @@ export class Form {
 
   private handleInput() {
     if (!this.isDirty) this.isDirty = true;
+    this.inputs?.forEach(((input) => input.validate()));
     this.emit("onInput");
   }
 

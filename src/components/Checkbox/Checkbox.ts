@@ -1,4 +1,4 @@
-import { Input, TInputConstraintEntry, TInputEvent } from "../Input";
+import { Input, TInputConstraintEntry, TInputDynamicValidity, TInputEvent } from "../Input";
 
 export interface ICheckboxConfig {
   onChange?: TInputEvent<Checkbox>;
@@ -6,9 +6,7 @@ export interface ICheckboxConfig {
   // Constraints
   validationMessage?: string;
   required?: TInputConstraintEntry<true>;
-  validate?: TInputConstraintEntry<
-    (checkboxGroup: Checkbox, context?: unknown) => boolean
-  >;
+  dynamicValidity?: TInputDynamicValidity;
 }
 
 export class Checkbox extends Input {

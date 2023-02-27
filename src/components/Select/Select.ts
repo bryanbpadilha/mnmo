@@ -1,4 +1,4 @@
-import { Input, TInputConstraintEntry, TInputEvent } from "../Input";
+import { Input, TInputConstraintEntry, TInputDynamicValidity, TInputEvent } from "../Input";
 
 export interface ISelectConfig {
   onChange?: TInputEvent<Select>;
@@ -6,9 +6,7 @@ export interface ISelectConfig {
   // Constraints
   validationMessage?: string;
   required?: TInputConstraintEntry<true>;
-  validate?: TInputConstraintEntry<
-    (select: Select, context?: unknown) => boolean
-  >;
+  dynamicValidity?: TInputDynamicValidity;
 }
 
 // TODO: implement the custom validate() function
