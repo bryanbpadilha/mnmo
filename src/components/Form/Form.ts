@@ -61,7 +61,6 @@ export class Form {
 
   private handleChange() {
     if (!this.isDirty) this.isDirty = true;
-    if (this.isSubmitted) this.element.reportValidity();
     this.emit("onChange");
   }
 
