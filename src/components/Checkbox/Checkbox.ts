@@ -17,7 +17,7 @@ export class Checkbox extends Input {
 
   constructor(element: HTMLInputElement, config?: ICheckboxConfig) {
     super({
-      constraints: ["required"],
+      supportedConstraints: ["required"],
     });
 
     this.element = element;

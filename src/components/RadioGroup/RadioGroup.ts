@@ -26,7 +26,7 @@ export class RadioGroup extends Input {
 
   constructor(element: HTMLElement, config?: IRadioGroupConfig) {
     super({
-      constraints: ['required']
+      supportedConstraints: ['required']
     });
 
     this.element = element;

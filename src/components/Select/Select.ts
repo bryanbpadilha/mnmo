@@ -18,7 +18,7 @@ export class Select extends Input {
 
   constructor(element: HTMLSelectElement, config?: ISelectConfig) {
     super({
-      constraints: ["required"],
+      supportedConstraints: ["required"],
     });
 
     this.element = element;

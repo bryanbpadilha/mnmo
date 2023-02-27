@@ -22,7 +22,7 @@ export class CheckboxGroup extends Input {
 
   constructor(element: HTMLElement, config?: ICheckboxGroupConfig) {
     super({
-      constraints: ['required'],
+      supportedConstraints: ['required'],
     });
 
     this.element = element;
