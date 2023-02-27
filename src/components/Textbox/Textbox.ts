@@ -37,12 +37,12 @@ export class Textbox extends Input {
   config?: ITextboxConfig;
 
   constructor(element: HTMLInputElement, config?: ITextboxConfig) {
-    super();
+    super({
+      constraints: ['required', 'step', 'min', 'max', 'minLength', 'maxLength', 'pattern']
+    });
 
     this.element = element;
     this.config = config;
-
-    this.syncConstraints(CONSTRAINTS);
 
     this.element.addEventListener("invalid", () => {
       this.handleInvalid();
@@ -52,52 +52,8 @@ export class Textbox extends Input {
       this.handleChange();
     });
   }
-
-  private emit(event: string) {
-    if (this.config && this.config[event]) {
-      this.config[event](this);
-    }
-  }
-
-  private handleChange() {
-    this.validate(this.validityError);
-    this.emit("onChange");
-  }
-
-  private handleInvalid() {
-    this.validate(this.validityError);
-    this.emit("onInvalid");
-  }
-
-  get defaultValidationMessage() {
-    return this.config?.validationMessage;
-  }
-
-  get validityError() {
-    return ERRORS.filter(([error]) => this.validity[error])[0];
-  }
-
-  get constraints() {
-    return this.config;
-  }
-
+  
   get elements() {
     return [this.element];
-  }
-
-  get error() {
-    return this.element.validationMessage;
-  }
-
-  get name() {
-    return this.element.name;
-  }
-
-  get value() {
-    return this.element.value;
-  }
-
-  get validity() {
-    return this.element.validity;
   }
 }

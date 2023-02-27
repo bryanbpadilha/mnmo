@@ -1,3 +1,29 @@
+export type TInputConstraints = Array<
+  [
+    "required",
+    "pattern",
+    "max",
+    "min",
+    "maxLength",
+    "minLength",
+    "step"
+  ][number]
+>;
+
+export type IInputErrorConstraintMap = Array<
+  [
+    ["badInput"],
+    ["typeMismatch"],
+    ["valueMissing", "required"],
+    ["patternMismatch", "pattern"],
+    ["rangeOverflow", "max"],
+    ["rangeUnderflow", "min"],
+    ["stepMismatch", "step"],
+    ["tooLong", "maxLength"],
+    ["tooShort", "minLength"]
+  ][number]
+>;
+
 export type TInputEvent<T> = (input: T) => void;
 
 export type TInputConstraintEntry<T> =
@@ -7,10 +33,40 @@ export type TInputConstraintEntry<T> =
       message: string;
     };
 
+export interface IInputConfig {
+  constraints: TInputConstraints;
+}
+
 export class Input {
+  config?: Record<string, any>;
+  constraints: TInputConstraints;
+
+  isTouched: boolean;
+
+  constructor(config: IInputConfig) {
+    this.constraints = config.constraints;
+    this.syncConstraints();
+  }
+
+  protected emit(event: string) {
+    if (this.config && this.config[event]) {
+      this.config[event](this);
+    }
+  }
+
+  protected handleChange() {
+    this.validate(this.validityError);
+    this.emit("onChange");
+  }
+
+  protected handleInvalid() {
+    this.validate(this.validityError);
+    this.emit("onInvalid");
+  }
+
   protected syncConstraintEntry(key: string) {
-    if (this.constraints && this.constraints[key]) {
-      const constraint = this.constraints[key];
+    if (this.config && this.config[key]) {
+      const constraint = this.config[key];
 
       let constraintValue: boolean | string | number;
       let constraintMessage: string | undefined;
@@ -19,7 +75,7 @@ export class Input {
         constraintValue = constraint.value;
         constraintMessage = constraint.message;
       } else {
-        constraintValue = this.constraints[key] as boolean | string | number;
+        constraintValue = this.config[key] as boolean | string | number;
       }
 
       for (const element of this.elements) {
@@ -34,8 +90,8 @@ export class Input {
     }
   }
 
-  protected syncConstraints(constraints: string[]) {
-    constraints.forEach((key) => this.syncConstraintEntry(key));
+  protected syncConstraints() {
+    this.constraints.forEach((key) => this.syncConstraintEntry(key));
   }
 
   protected getDefaultValidationMessage() {
@@ -82,12 +138,18 @@ export class Input {
     return this.elements.every((element) => element.reportValidity());
   }
 
-  get constraints(): undefined | Record<string, any> {
-    return;
+  get defaultValidationMessage(): string | undefined {
+    return this.config?.validationMessage;
   }
 
-  get defaultValidationMessage(): string | undefined {
-    return;
+  get validity() {
+    return this.elements[0].validity;
+  }
+
+  get validityError() {
+    return this.errorConstraintMap.filter(
+      ([errorName, constraintName]) => this.validity[errorName]
+    )[0];
   }
 
   get elements(): (HTMLInputElement | HTMLSelectElement)[] {
@@ -95,14 +157,49 @@ export class Input {
   }
 
   get error(): string {
-    return "";
+    return this.elements[0].validationMessage;
   }
 
   get name(): string {
-    return "";
+    return this.elements[0].name;
   }
 
   get value(): any {
-    return;
+    return this.elements[0].value;
+  }
+
+  get errorConstraintMap(): IInputErrorConstraintMap {
+    const errorConstraintMap: IInputErrorConstraintMap = [
+      ["badInput"],
+      ["typeMismatch"],
+    ];
+
+    for (const constraint of this.constraints) {
+      switch (constraint) {
+        case "required":
+          errorConstraintMap.push(["valueMissing", "required"]);
+          break;
+        case "pattern":
+          errorConstraintMap.push(["patternMismatch", "pattern"]);
+          break;
+        case "min":
+          errorConstraintMap.push(["rangeUnderflow", "min"]);
+          break;
+        case "max":
+          errorConstraintMap.push(["rangeOverflow", "max"]);
+          break;
+        case "minLength":
+          errorConstraintMap.push(["tooShort", "minLength"]);
+          break;
+        case "maxLength":
+          errorConstraintMap.push(["tooLong", "maxLength"]);
+          break;
+        case "step":
+          errorConstraintMap.push(["stepMismatch", "step"]);
+          break;
+      }
+    }
+
+    return errorConstraintMap;
   }
 }
