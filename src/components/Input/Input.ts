@@ -33,19 +33,18 @@ export type TInputConstraintEntry<T> =
       message: string;
     };
 
-export interface IInputConfig {
+export interface IInputProperties {
   supportedConstraints: TInputConstraints;
 }
 
 export class Input {
   config?: Record<string, any>;
-  supportedConstraints: TInputConstraints;
+  supportedConstraints: IInputProperties['supportedConstraints'];
 
   isTouched: boolean;
 
-  constructor(config: IInputConfig) {
-    this.supportedConstraints = config.supportedConstraints;
-    this.syncConstraints();
+  constructor(properties: IInputProperties) {
+    this.supportedConstraints = properties.supportedConstraints;
     this.isTouched = false;
   }
 

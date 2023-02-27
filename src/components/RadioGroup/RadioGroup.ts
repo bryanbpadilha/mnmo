@@ -32,6 +32,8 @@ export class RadioGroup extends Input {
     this.element = element;
     this.config = config;
 
+    this.syncConstraints();
+
     this.radioButtons = Array.from(
       this.element.querySelectorAll<HTMLInputElement>("input[type=radio]")
     );

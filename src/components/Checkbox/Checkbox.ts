@@ -23,6 +23,8 @@ export class Checkbox extends Input {
     this.element = element;
     this.config = config;
 
+    this.syncConstraints();
+
     this.element.addEventListener("invalid", () => {
       this.handleInvalid();
     });
