@@ -1,6 +1,6 @@
 {
   "name": "mnmo",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "main": "./dist/index.min.js",
   "keywords": [],
   "author": {
@@ -17,7 +17,8 @@
     "test": "node test.mjs",
     "build": "rm -rf ./dist && node esbuild.mjs",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
