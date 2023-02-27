@@ -38,7 +38,7 @@ export class Textbox extends Input {
 
   constructor(element: HTMLInputElement, config?: ITextboxConfig) {
     super({
-      constraints: ['required', 'step', 'min', 'max', 'minLength', 'maxLength', 'pattern']
+      supportedConstraints: ['required', 'step', 'min', 'max', 'minLength', 'maxLength', 'pattern']
     });
 
     this.element = element;

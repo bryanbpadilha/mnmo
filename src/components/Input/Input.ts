@@ -34,17 +34,17 @@ export type TInputConstraintEntry<T> =
     };
 
 export interface IInputConfig {
-  constraints: TInputConstraints;
+  supportedConstraints: TInputConstraints;
 }
 
 export class Input {
   config?: Record<string, any>;
-  constraints: TInputConstraints;
+  supportedConstraints: TInputConstraints;
 
   isTouched: boolean;
 
   constructor(config: IInputConfig) {
-    this.constraints = config.constraints;
+    this.supportedConstraints = config.supportedConstraints;
     this.syncConstraints();
     this.isTouched = false;
   }
@@ -93,7 +93,7 @@ export class Input {
   }
 
   protected syncConstraints() {
-    this.constraints.forEach((key) => this.syncConstraintEntry(key));
+    this.supportedConstraints.forEach((key) => this.syncConstraintEntry(key));
   }
 
   protected getDefaultValidationMessage() {
@@ -176,7 +176,7 @@ export class Input {
       ["typeMismatch"],
     ];
 
-    for (const constraint of this.constraints) {
+    for (const constraint of this.supportedConstraints) {
       switch (constraint) {
         case "required":
           errorConstraintMap.push(["valueMissing", "required"]);
