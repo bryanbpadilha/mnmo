@@ -34,5 +34,7 @@ export const Example: StoryFn = (): HTMLElement => {
     }
   })
 
+  console.log(checkbox);
+
   return container;
 };

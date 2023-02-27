@@ -155,4 +155,8 @@ export class Form {
   get elements() {
     return this.element.elements;
   }
+
+  get isValid() {
+    return Object.values(this.errors).every((error) => !error || error.length == 0);
+  }
 }

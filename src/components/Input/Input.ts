@@ -160,6 +160,10 @@ export class Input {
     return [];
   }
 
+  get isValid() {
+    return !this.error || this.error.length == 0;
+  }
+
   get error(): string {
     return this.elements[0].validationMessage;
   }
