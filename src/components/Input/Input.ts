@@ -79,7 +79,7 @@ export class Input {
 
   reportValidity() {
     this.validate();
-    return this.elements.every((element) => element.checkValidity());
+    return this.elements.every((element) => element.reportValidity());
   }
 
   get constraints(): undefined | Record<string, any> {
