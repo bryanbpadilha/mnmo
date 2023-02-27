@@ -11,7 +11,7 @@ export const Example: StoryFn = (): HTMLElement => {
 
     <p>
       <label>
-        <input type="checkbox" name="terms" required validation-message="You must accept the terms and conditions to continue." />
+        <input type="checkbox" name="terms" />
         <span>Terms and conditions.</span>
       </label>
     </p>
@@ -19,7 +19,11 @@ export const Example: StoryFn = (): HTMLElement => {
     <button id="report-btn">Report Validity</button>
   `;
 
-  const checkbox = new Checkbox(container.querySelector("[name=terms]") as HTMLInputElement);
+  const checkbox = new Checkbox(container.querySelector("[name=terms]") as HTMLInputElement, {
+    required: true,
+    validationMessage: 'Bla bla required'
+  });
+
   const reportButton = container.querySelector('#report-btn') as HTMLButtonElement;
 
   reportButton.addEventListener('click', () => {

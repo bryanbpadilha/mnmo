@@ -65,6 +65,10 @@ export class RadioGroup extends Input {
     this.emit("onInvalid");
   }
 
+  get constraints() {
+    return this.config;
+  }
+
   get elements() {
     return this.radioButtons;
   }

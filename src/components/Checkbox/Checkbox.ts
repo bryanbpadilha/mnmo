@@ -56,6 +56,10 @@ export class Checkbox extends Input {
     this.emit("onInvalid");
   }
 
+  get constraints() {
+    return this.config;
+  }
+
   get elements() {
     return [this.element];
   }
