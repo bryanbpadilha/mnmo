@@ -105,7 +105,7 @@ export const restoreCursorPosition = (
 export const maskValue = (value: string, mask: string, event?: InputEvent) => {
   let output = buildUp(value, mask);
 
-  if (event?.inputType.includes("delete")) {
+  if (event?.inputType?.includes("delete")) {
     output = backspaceMask(value);
   }
 
