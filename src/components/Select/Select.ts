@@ -9,7 +9,6 @@ export interface ISelectConfig {
   dynamicValidity?: TInputDynamicValidity;
 }
 
-// TODO: implement the custom validate() function
 export class Select extends Input {
   element: HTMLSelectElement;
   config?: ISelectConfig;

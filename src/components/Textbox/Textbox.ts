@@ -1,4 +1,10 @@
-import { Input, TInputConstraintEntry, TInputDynamicValidity, TInputEvent } from "../Input";
+import {
+  Input,
+  TInputConstraintEntry,
+  TInputDynamicValidity,
+  TInputEvent,
+} from "../Input";
+import { maskValue, restoreCursorPosition } from "./Textbox.util";
 
 const ERRORS = [
   ["valueMissing", "required"],
@@ -25,18 +31,27 @@ export interface ITextboxConfig {
   max?: TInputConstraintEntry<number | string>;
   minLength?: TInputConstraintEntry<number>;
   maxLength?: TInputConstraintEntry<number>;
-  pattern?: TInputConstraintEntry<number>;
+  pattern?: TInputConstraintEntry<string>;
   dynamicValidity?: TInputDynamicValidity;
+  // Mask
+  mask?: string;
 }
 
-// TODO: implement the custom validate() function
 export class Textbox extends Input {
   element: HTMLInputElement;
   config?: ITextboxConfig;
 
   constructor(element: HTMLInputElement, config?: ITextboxConfig) {
     super({
-      supportedConstraints: ['required', 'step', 'min', 'max', 'minLength', 'maxLength', 'pattern']
+      supportedConstraints: [
+        "required",
+        "step",
+        "min",
+        "max",
+        "minLength",
+        "maxLength",
+        "pattern",
+      ],
     });
 
     this.element = element;
@@ -44,15 +59,31 @@ export class Textbox extends Input {
 
     this.syncConstraints();
 
+    if (this.config?.mask && !["tel", "text"].includes(this.element.type)) {
+      throw new Error(
+        'Textbox masking is only allowed with input type of "tel" or "text"'
+      );
+    }
+
     this.element.addEventListener("invalid", () => {
       this.handleInvalid();
     });
 
-    this.element.addEventListener("input", () => {
+    this.element.addEventListener("input", (e) => {
       this.handleChange();
+
+      if (!this.config?.mask) return;
+
+      const value = this.value;
+      const mask = this.config.mask;
+      const event = e as InputEvent;
+
+      restoreCursorPosition(value, mask, event, () => {
+        this.element.value = maskValue(value, mask, event);
+      });
     });
   }
-  
+
   get elements() {
     return [this.element];
   }

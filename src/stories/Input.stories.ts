@@ -1,5 +1,5 @@
 import { StoryFn, Meta } from "@storybook/html";
-import { Textbox } from "../components";
+import { Form, Textbox } from "../components";
 
 export default {} as Meta;
 
@@ -7,25 +7,27 @@ export const Example: StoryFn = (): HTMLElement => {
   const container = document.createElement("div");
 
   container.innerHTML = /* html */ `
-    <p>The input below has no form attached to it.</p>
+    <form>
+      <label>
+        <div>Phone</div>
+        <input name="phone" type="tel" placeholder="(999) 999 - 9999" autocomplete="off" />
+      </label>
 
-    <label>
-      <div>Email</div>
-      <input name="email" type="email" autocomplete="off" required required-message="Very important field ahead." />
-    </label>
-
-    <button id="report-btn">Report Validity</button>
+      <button type="submit">Submit</button>
+    </form>
   `;
 
-  const textbox = new Textbox(container.querySelector("[name=email]") as HTMLInputElement, {
-    validationMessage: 'Please use a valid email.',
+  const textbox = new Textbox(container.querySelector("[name=phone]") as HTMLInputElement, {
+    required: true,
+    pattern: '[\\(]\\d{3}[\\)] \\d{3} [\\-] \\d{4}',
+    mask: '(999) 999 - 9999',
   });
 
-  const reportButton = container.querySelector('#report-btn') as HTMLButtonElement;
-
-  reportButton.addEventListener('click', () => {
-    textbox.reportValidity();
-  })
+  new Form(container.querySelector('form') as HTMLFormElement, {
+    async onSubmit(form) {
+      console.log(form);
+    }
+  });
   
   return container;
 };
