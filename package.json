@@ -16,21 +16,13 @@
   "scripts": {
     "test": "node test.mjs",
     "build": "rm -rf ./dist && node esbuild.mjs",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "docs": "astro dev --root ./docs"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.12",
-    "@storybook/addon-actions": "^6.5.16",
-    "@storybook/addon-essentials": "^6.5.16",
-    "@storybook/addon-interactions": "^6.5.16",
-    "@storybook/addon-links": "^6.5.16",
-    "@storybook/builder-webpack4": "^6.5.16",
-    "@storybook/html": "^6.5.16",
-    "@storybook/manager-webpack4": "^6.5.16",
-    "@storybook/testing-library": "^0.0.13",
-    "babel-loader": "^8.3.0",
+    "@astrojs/mdx": "^0.17.2",
+    "astro": "^2.0.16",
+    "concurrently": "^7.6.0",
     "esbuild": "^0.17.6",
     "typescript": "^4.9.5"
   }
