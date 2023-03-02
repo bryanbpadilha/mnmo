@@ -1,5 +1,5 @@
 // Input masking inspired by https://github.com/alpinejs/alpine/blob/main/packages/mask/src/index.js
-const backspaceMask = (value: string) => {
+const backspaceMask = (value: string): string => {
     const isLastCharValid =
         value.length == 0 || /[0-9a-zA-Z]/.test(value[value.length - 1]);
 
@@ -43,7 +43,11 @@ const stripDown = (value: string, mask: string) => {
         let found = false;
 
         for (let j = 0; j < inputToBeStripped.length; j++) {
-            if (regexes[wildcardTemplate[i]].test(inputToBeStripped[j])) {
+            if (
+                regexes[wildcardTemplate[i] as keyof typeof regexes].test(
+                    inputToBeStripped[j]
+                )
+            ) {
                 output += inputToBeStripped[j];
                 inputToBeStripped =
                     inputToBeStripped.slice(0, j) +

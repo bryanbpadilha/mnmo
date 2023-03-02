@@ -14,11 +14,11 @@ This is a test documentation explanation. It's pretty long. Or not.
 
 <form>
     <label>
-        <div>Email</div>
+        <div>Tel</div>
         <input
-            type="email"
-            name="email"
-            validation-message="Please use a valid email address."
+            type="tel"
+            name="tel"
+            mask="(999) 999-9999"
             required
         />
     </label>
@@ -35,6 +35,6 @@ This is a test documentation explanation. It's pretty long. Or not.
     })
 
     form.append(
-        new Textbox(form.element.querySelector('[name=email]'))
+        new Textbox(form.element.querySelector('[name=tel]'))
     )
 </script>

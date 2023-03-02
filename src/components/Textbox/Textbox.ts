@@ -40,6 +40,7 @@ export interface ITextboxConfig {
 export class Textbox extends Input {
     element: HTMLInputElement;
     config?: ITextboxConfig;
+    mask?: string | null;
 
     constructor(element: HTMLInputElement, config?: ITextboxConfig) {
         super({
@@ -56,10 +57,11 @@ export class Textbox extends Input {
 
         this.element = element;
         this.config = config;
+        this.mask = this.config?.mask ?? this.element.getAttribute("mask");
 
         this.syncConstraints();
 
-        if (this.config?.mask && !["tel", "text"].includes(this.element.type)) {
+        if (this.mask && !["tel", "text"].includes(this.element.type)) {
             throw new Error(
                 'Textbox masking is only allowed with input type of "tel" or "text"'
             );
@@ -72,10 +74,10 @@ export class Textbox extends Input {
         this.element.addEventListener("input", (e) => {
             this.handleChange();
 
-            if (!this.config?.mask) return;
+            if (!this.mask) return;
 
             const value = this.value;
-            const mask = this.config.mask;
+            const mask = this.mask;
             const event = e as InputEvent;
 
             restoreCursorPosition(value, mask, event, () => {
