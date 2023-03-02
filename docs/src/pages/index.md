@@ -15,10 +15,26 @@ This is a test documentation explanation. It's pretty long. Or not.
 <form>
     <label>
         <div>Email</div>
-        <input type="email" name="email" required validation-message="Please use a valid email address." />
+        <input
+            type="email"
+            name="email"
+            validation-message="Please use a valid email address."
+            required
+        />
     </label>
+    <button type="submit">Submit</button>
 </form>
 
 <script>
-    console.log('test');
+    const { Form, Textbox } = window.mnmo;
+
+    const form = new Form(document.querySelector('form'), {
+        async onSubmit(form) {
+            console.log(form);
+        }
+    })
+
+    form.append(
+        new Textbox(form.element.querySelector('[name=email]'))
+    )
 </script>

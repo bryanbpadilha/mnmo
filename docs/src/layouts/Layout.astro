@@ -18,6 +18,7 @@ const { frontmatter } = Astro.props;
         <meta name="generator" content={Astro.generator} />
         <title>{frontmatter.title}</title>
         <link rel="stylesheet" href="pico.css" />
+        <script is:inline src="http://localhost:8000/index-dev.js"></script>
     </head>
     <body class="container">
         <header>
@@ -28,5 +29,4 @@ const { frontmatter } = Astro.props;
         </header>
         <slot />
     </body>
-    <script src="../../../src/index.ts"></script>
 </html>

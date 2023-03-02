@@ -14,8 +14,10 @@
     "license": "ISC",
     "description": "Headless UI in vanilla JS",
     "scripts": {
+        "start": "concurrently npm:serve npm:docs",
         "test": "node test.mjs",
         "build": "rm -rf ./dist && node esbuild.mjs",
+        "serve": "esbuild ./src/index-dev.ts --bundle --outdir=www --watch --servedir=www",
         "prepublishOnly": "npm run build",
         "docs": "astro dev --root ./docs",
         "prepare": "husky install"
