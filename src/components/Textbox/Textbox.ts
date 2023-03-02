@@ -34,13 +34,13 @@ export interface ITextboxConfig {
     pattern?: TInputConstraintEntry<string>;
     dynamicValidity?: TInputDynamicValidity;
     // Mask
-    mask?: string;
+    mask?: string | ((value: string) => string);
 }
 
 export class Textbox extends Input {
     element: HTMLInputElement;
     config?: ITextboxConfig;
-    mask?: string | null;
+    mask?: string | ((value: string) => string) | null;
 
     constructor(element: HTMLInputElement, config?: ITextboxConfig) {
         super({
@@ -77,7 +77,8 @@ export class Textbox extends Input {
             if (!this.mask) return;
 
             const value = this.value;
-            const mask = this.mask;
+            const mask =
+                typeof this.mask === "string" ? this.mask : this.mask(value);
             const event = e as InputEvent;
 
             restoreCursorPosition(value, mask, event, () => {
