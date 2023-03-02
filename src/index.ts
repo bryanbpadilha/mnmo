@@ -1,8 +1,8 @@
 // TODO: Figure out how to document functions
 // TODO: Figure out how context should work (reducer-like, maybe?)
 
-import * as components from './components';
-import * as util from './util';
+import * as components from "./components";
+import * as util from "./util";
 
 export default { ...components, util };
 
@@ -14,5 +14,5 @@ declare global {
 
 window.mnmo = {
     util,
-    ...components
+    ...components,
 };

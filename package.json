@@ -1,29 +1,36 @@
 {
-  "name": "mnmo",
-  "version": "1.0.22",
-  "main": "./dist/index.min.js",
-  "keywords": [],
-  "author": {
-    "name": "Bryan B Padilha",
-    "email": "bryan@bryanbpadilha.com",
-    "url": "https://bryanbpadilha.com/"
-  },
-  "files": [
-    "/dist"
-  ],
-  "license": "ISC",
-  "description": "Headless UI in vanilla JS",
-  "scripts": {
-    "test": "node test.mjs",
-    "build": "rm -rf ./dist && node esbuild.mjs",
-    "prepublishOnly": "npm run build",
-    "docs": "astro dev --root ./docs"
-  },
-  "devDependencies": {
-    "@astrojs/mdx": "^0.17.2",
-    "astro": "^2.0.16",
-    "concurrently": "^7.6.0",
-    "esbuild": "^0.17.6",
-    "typescript": "^4.9.5"
-  }
+    "name": "mnmo",
+    "version": "1.0.22",
+    "main": "./dist/index.min.js",
+    "keywords": [],
+    "author": {
+        "name": "Bryan B Padilha",
+        "email": "bryan@bryanbpadilha.com",
+        "url": "https://bryanbpadilha.com/"
+    },
+    "files": [
+        "/dist"
+    ],
+    "license": "ISC",
+    "description": "Headless UI in vanilla JS",
+    "scripts": {
+        "test": "node test.mjs",
+        "build": "rm -rf ./dist && node esbuild.mjs",
+        "prepublishOnly": "npm run build",
+        "docs": "astro dev --root ./docs",
+        "prepare": "husky install"
+    },
+    "devDependencies": {
+        "@astrojs/mdx": "^0.17.2",
+        "astro": "^2.0.16",
+        "concurrently": "^7.6.0",
+        "esbuild": "^0.17.6",
+        "husky": "^8.0.3",
+        "lint-staged": "^13.1.2",
+        "prettier": "2.8.4",
+        "typescript": "^4.9.5"
+    },
+    "lint-staged": {
+        "**/*": "prettier --write --ignore-unknown"
+    }
 }

@@ -1,63 +1,64 @@
-import { Input, TInputConstraintEntry, TInputDynamicValidity, TInputEvent } from "../Input";
-    
-const ERRORS = [
-  ["valueMissing", "required"],
-  ["badInput"],
-  ["typeMismatch"],
-];
+import {
+    Input,
+    TInputConstraintEntry,
+    TInputDynamicValidity,
+    TInputEvent,
+} from "../Input";
+
+const ERRORS = [["valueMissing", "required"], ["badInput"], ["typeMismatch"]];
 
 const CONSTRAINTS = ERRORS.map(([errorName, constraintName]) => constraintName);
 
 export interface IRadioGroupConfig {
-  onChange?: TInputEvent<RadioGroup>;
-  onInvalid?: TInputEvent<RadioGroup>;
-  // Constraints
-  validationMessage?: string;
-  required?: TInputConstraintEntry<true>;
-  dynamicValidity?: TInputDynamicValidity;
+    onChange?: TInputEvent<RadioGroup>;
+    onInvalid?: TInputEvent<RadioGroup>;
+    // Constraints
+    validationMessage?: string;
+    required?: TInputConstraintEntry<true>;
+    dynamicValidity?: TInputDynamicValidity;
 }
 
 export class RadioGroup extends Input {
-  element: HTMLElement;
-  radioButtons: HTMLInputElement[];
-  config?: IRadioGroupConfig;
+    element: HTMLElement;
+    radioButtons: HTMLInputElement[];
+    config?: IRadioGroupConfig;
 
-  constructor(element: HTMLElement, config?: IRadioGroupConfig) {
-    super({
-      supportedConstraints: ['required']
-    });
+    constructor(element: HTMLElement, config?: IRadioGroupConfig) {
+        super({
+            supportedConstraints: ["required"],
+        });
 
-    this.element = element;
-    this.config = config;
+        this.element = element;
+        this.config = config;
 
-    this.radioButtons = Array.from(
-      this.element.querySelectorAll<HTMLInputElement>("input[type=radio]")
-    );
+        this.radioButtons = Array.from(
+            this.element.querySelectorAll<HTMLInputElement>("input[type=radio]")
+        );
 
-    this.syncConstraints();
+        this.syncConstraints();
 
-    Array.from(this.radioButtons).forEach((button) =>
-      button.addEventListener("invalid", () => {
-        this.handleInvalid();
-      })
-    );
+        Array.from(this.radioButtons).forEach((button) =>
+            button.addEventListener("invalid", () => {
+                this.handleInvalid();
+            })
+        );
 
-    Array.from(this.radioButtons).forEach((button) =>
-      button.addEventListener("input", () => {
-        this.handleChange();
-      })
-    );
-  }
-  
-  get elements() {
-    return this.radioButtons;
-  }
+        Array.from(this.radioButtons).forEach((button) =>
+            button.addEventListener("input", () => {
+                this.handleChange();
+            })
+        );
+    }
 
-  get checked(): HTMLInputElement | undefined {
-    return this.radioButtons.filter((button) => button.checked)[0];
-  }
+    get elements() {
+        return this.radioButtons;
+    }
 
-  get value() {
-    return this.checked ? this.checked.value : null;
-  }
+    get checked(): HTMLInputElement | undefined {
+        return this.radioButtons.filter((button) => button.checked)[0];
+    }
+
+    get value() {
+        return this.checked ? this.checked.value : null;
+    }
 }

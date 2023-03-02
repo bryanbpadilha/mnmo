@@ -1,9 +1,9 @@
 ---
 export interface Props {
-	frontmatter: {
-		title: string;
-		subtitle?: string;
-	};
+    frontmatter: {
+        title: string;
+        subtitle?: string;
+    };
 }
 
 const { frontmatter } = Astro.props;
@@ -11,24 +11,22 @@ const { frontmatter } = Astro.props;
 
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{frontmatter.title}</title>
-		<link rel="stylesheet" href="pico.css">
-	</head>
-	<body class="container">
-		<header>
-			<hgroup>
-				<h1>{frontmatter.title}</h1>
-				{frontmatter.subtitle && (
-					<p>{frontmatter.subtitle}</p>
-				)}
-			</hgroup>
-		</header>
-		<slot />
-	</body>
-	<script src="../../../src/index.ts"></script>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{frontmatter.title}</title>
+        <link rel="stylesheet" href="pico.css" />
+    </head>
+    <body class="container">
+        <header>
+            <hgroup>
+                <h1>{frontmatter.title}</h1>
+                {frontmatter.subtitle && <p>{frontmatter.subtitle}</p>}
+            </hgroup>
+        </header>
+        <slot />
+    </body>
+    <script src="../../../src/index.ts"></script>
 </html>
