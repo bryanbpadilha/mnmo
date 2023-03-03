@@ -1,4 +1,4 @@
-import { Form } from "..";
+import type { Form } from "..";
 
 export type TInputDynamicValidity = (value: any, context: unknown) => string;
 

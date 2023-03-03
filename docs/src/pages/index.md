@@ -14,11 +14,12 @@ This is a test documentation explanation. It's pretty long. Or not.
 
 <form>
     <label>
-        <div>Phone</div>
+        <div>Date</div>
         <input
-            type="tel"
-            name="tel"
-            mask="(999) 999-9999"
+            type="text"
+            name="date"
+            mask="99/99/9999"
+            placeholder="MM/DD/YYYY"
             required
         />
     </label>
@@ -39,7 +40,9 @@ This is a test documentation explanation. It's pretty long. Or not.
     })
 
     form.append(
-        new Textbox('[name=tel]'),
+        new Textbox('[name=date]', {
+            valueAs: (value) => new Date(value)
+        }),
         new Textbox('[name=message]')
     )
 </script>

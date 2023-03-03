@@ -36,6 +36,7 @@ export interface ITextboxConfig {
     dynamicValidity?: TInputDynamicValidity;
     // Mask
     mask?: string | ((value: string) => string);
+    valueAs?: (value: string) => any;
 }
 
 export class Textbox extends Input {
@@ -91,7 +92,7 @@ export class Textbox extends Input {
 
             if (!this.mask) return;
 
-            const value = this.value;
+            const value = this.element.value;
             const mask =
                 typeof this.mask === "string" ? this.mask : this.mask(value);
             const event = e as InputEvent;
@@ -104,5 +105,13 @@ export class Textbox extends Input {
 
     get elements() {
         return [this.element as HTMLInputElement];
+    }
+
+    get value() {
+        if (this.config?.valueAs) {
+            return this.config.valueAs(this.element.value);
+        } else {
+            return this.element.value;
+        }
     }
 }
