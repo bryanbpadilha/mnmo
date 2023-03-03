@@ -39,11 +39,14 @@ export interface ITextboxConfig {
 }
 
 export class Textbox extends Input {
-    element: HTMLInputElement;
+    element: HTMLInputElement | HTMLTextAreaElement;
     config?: ITextboxConfig;
     mask?: string | ((value: string) => string) | null;
 
-    constructor(element: HTMLInputElement | string, config?: ITextboxConfig) {
+    constructor(
+        element: HTMLTextAreaElement | HTMLInputElement | string,
+        config?: ITextboxConfig
+    ) {
         super({
             supportedConstraints: [
                 "required",
@@ -56,9 +59,15 @@ export class Textbox extends Input {
             ],
         });
 
-        this.element = getElement(element) as HTMLInputElement;
+        this.element = getElement(element) as
+            | HTMLInputElement
+            | HTMLTextAreaElement;
 
-        if (!this.element || !(this.element instanceof HTMLInputElement)) {
+        if (
+            !this.element ||
+            !(this.element instanceof HTMLInputElement) ||
+            !(this.element instanceof HTMLTextAreaElement)
+        ) {
             throw new Error("Invalid element or selector for Textbox");
         }
 
@@ -94,6 +103,6 @@ export class Textbox extends Input {
     }
 
     get elements() {
-        return [this.element];
+        return [this.element as HTMLInputElement];
     }
 }
