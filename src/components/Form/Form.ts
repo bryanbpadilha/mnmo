@@ -1,4 +1,4 @@
-import { Input } from "..";
+import type { Input } from "..";
 
 export type TFormEvent = (form: Form) => void;
 export type TFormSubmitEvent = (form: Form) => Promise<void>;
@@ -8,6 +8,7 @@ export interface IFormConfig {
     onChange?: TFormEvent;
     onInput?: TFormEvent;
     onSubmit?: TFormSubmitEvent;
+    useNativeValidation?: boolean;
 }
 
 export class Form {
@@ -48,9 +49,11 @@ export class Form {
         );
     }
 
-    private async emit(event: string) {
+    private async emit(event: keyof IFormConfig) {
         if (this.config && this.config[event]) {
-            await this.config[event](this);
+            if (typeof this.config[event] === "function") {
+                await (this.config[event] as Function)(this);
+            }
         }
     }
 
@@ -80,8 +83,11 @@ export class Form {
         if (!this.isSubmitted) this.isSubmitted = true;
 
         if (this.config && this.config.onInvalid) {
-            event.preventDefault();
             this.emit("onInvalid");
+        }
+
+        if (!this.config?.useNativeValidation) {
+            event.preventDefault();
         }
     }
 
