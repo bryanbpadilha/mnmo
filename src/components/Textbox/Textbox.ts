@@ -65,8 +65,8 @@ export class Textbox extends Input {
 
         if (
             !this.element ||
-            !(this.element instanceof HTMLInputElement) ||
-            !(this.element instanceof HTMLTextAreaElement)
+            (!(this.element instanceof HTMLInputElement) &&
+                !(this.element instanceof HTMLTextAreaElement))
         ) {
             throw new Error("Invalid element or selector for Textbox");
         }

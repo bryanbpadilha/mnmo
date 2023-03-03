@@ -14,13 +14,17 @@ This is a test documentation explanation. It's pretty long. Or not.
 
 <form>
     <label>
-        <div>Tel</div>
+        <div>Phone</div>
         <input
             type="tel"
             name="tel"
             mask="(999) 999-9999"
             required
         />
+    </label>
+    <label>
+        <div>Message</div>
+        <textarea name="message" rows="5" required></textarea>
     </label>
     <button type="submit">Submit</button>
 </form>
@@ -35,6 +39,7 @@ This is a test documentation explanation. It's pretty long. Or not.
     })
 
     form.append(
-        new Textbox('[name=tel]')
+        new Textbox('[name=tel]'),
+        new Textbox('[name=message]')
     )
 </script>
