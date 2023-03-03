@@ -1,3 +1,4 @@
+import { getElement } from "../../util";
 import {
     Input,
     TInputConstraintEntry,
@@ -42,7 +43,7 @@ export class Textbox extends Input {
     config?: ITextboxConfig;
     mask?: string | ((value: string) => string) | null;
 
-    constructor(element: HTMLInputElement, config?: ITextboxConfig) {
+    constructor(element: HTMLInputElement | string, config?: ITextboxConfig) {
         super({
             supportedConstraints: [
                 "required",
@@ -55,7 +56,12 @@ export class Textbox extends Input {
             ],
         });
 
-        this.element = element;
+        this.element = getElement(element) as HTMLInputElement;
+
+        if (!this.element || !(this.element instanceof HTMLInputElement)) {
+            throw new Error("Invalid element or selector for Textbox");
+        }
+
         this.config = config;
         this.mask = this.config?.mask ?? this.element.getAttribute("mask");
 

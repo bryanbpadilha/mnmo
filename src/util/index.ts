@@ -4,3 +4,8 @@ export const uid = (function () {
         return prefix ? prefix + "-" + id : id + "";
     };
 })();
+
+export const getElement = (value: string | HTMLElement) => {
+    if (value instanceof HTMLElement) return value;
+    return document.querySelector(value as string);
+};

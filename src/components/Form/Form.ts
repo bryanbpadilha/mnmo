@@ -1,4 +1,5 @@
 import type { Input } from "..";
+import { getElement } from "../../util";
 
 export type TFormEvent = (form: Form) => void;
 export type TFormSubmitEvent = (form: Form) => Promise<void>;
@@ -8,7 +9,6 @@ export interface IFormConfig {
     onChange?: TFormEvent;
     onInput?: TFormEvent;
     onSubmit?: TFormSubmitEvent;
-    useNativeValidation?: boolean;
 }
 
 export class Form {
@@ -20,8 +20,13 @@ export class Form {
     isSubmitted: boolean;
     isSubmitting: boolean;
 
-    constructor(element: HTMLFormElement, config?: IFormConfig) {
-        this.element = element;
+    constructor(element: HTMLFormElement | string, config?: IFormConfig) {
+        this.element = getElement(element) as HTMLFormElement;
+
+        if (!this.element || !(this.element instanceof HTMLFormElement)) {
+            throw new Error("Invalid element or selector for Form");
+        }
+
         this.config = config;
 
         this.isDirty = false;
@@ -83,11 +88,8 @@ export class Form {
         if (!this.isSubmitted) this.isSubmitted = true;
 
         if (this.config && this.config.onInvalid) {
-            this.emit("onInvalid");
-        }
-
-        if (!this.config?.useNativeValidation) {
             event.preventDefault();
+            this.emit("onInvalid");
         }
     }
 

@@ -28,13 +28,13 @@ This is a test documentation explanation. It's pretty long. Or not.
 <script>
     const { Form, Textbox } = window.mnmo;
 
-    const form = new Form(document.querySelector('form'), {
+    const form = new Form('form', {
         async onSubmit(form) {
             console.log(form);
         }
     })
 
     form.append(
-        new Textbox(form.element.querySelector('[name=tel]'))
+        new Textbox('[name=tel]')
     )
 </script>
