@@ -60,17 +60,17 @@ export class Textbox extends Input {
             ],
         });
 
-        this.element = getElement(element) as
-            | HTMLInputElement
-            | HTMLTextAreaElement;
-
         if (
-            !this.element ||
-            (!(this.element instanceof HTMLInputElement) &&
-                !(this.element instanceof HTMLTextAreaElement))
+            !getElement(element) ||
+            (!(getElement(element) instanceof HTMLInputElement) &&
+                !(getElement(element) instanceof HTMLTextAreaElement))
         ) {
             throw new Error("Invalid element or selector for Textbox");
         }
+
+        this.element = getElement(element) as
+            | HTMLInputElement
+            | HTMLTextAreaElement;
 
         this.config = config;
         this.mask = this.config?.mask ?? this.element.getAttribute("mask");

@@ -1,3 +1,4 @@
+import { getElement } from "../../util";
 import {
     Input,
     TInputConstraintEntry,
@@ -18,12 +19,20 @@ export class Select extends Input {
     element: HTMLSelectElement;
     config?: ISelectConfig;
 
-    constructor(element: HTMLSelectElement, config?: ISelectConfig) {
+    constructor(element: HTMLSelectElement | string, config?: ISelectConfig) {
         super({
             supportedConstraints: ["required"],
         });
 
-        this.element = element;
+        if (
+            !getElement(element) ||
+            !(getElement(element) instanceof HTMLSelectElement)
+        ) {
+            throw new Error("Invalid element or selector for Select");
+        }
+
+        this.element = getElement(element) as HTMLSelectElement;
+
         this.config = config;
 
         this.syncConstraints();

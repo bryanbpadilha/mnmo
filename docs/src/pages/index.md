@@ -14,6 +14,14 @@ This is a test documentation explanation. It's pretty long. Or not.
 
 <form>
     <label>
+      <div>Color</div> 
+      <select name="color" required>
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="yellow">Yellow</option>
+      </select>
+    </label>
+    <label>
         <div>Date</div>
         <input
             type="text"
@@ -31,7 +39,7 @@ This is a test documentation explanation. It's pretty long. Or not.
 </form>
 
 <script>
-    const { Form, Textbox } = window.mnmo;
+    const { Form, Textbox, Select } = window.mnmo;
 
     const form = new Form('form', {
         async onSubmit(form) {
@@ -40,9 +48,12 @@ This is a test documentation explanation. It's pretty long. Or not.
     })
 
     form.append(
+        new Select('[name=color]'),
+
         new Textbox('[name=date]', {
             valueAs: (value) => new Date(value)
         }),
+
         new Textbox('[name=message]')
     )
 </script>
