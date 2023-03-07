@@ -1,3 +1,4 @@
+import { getElement } from "../../util";
 import {
     Input,
     TInputConstraintEntry,
@@ -23,12 +24,20 @@ export class RadioGroup extends Input {
     radioButtons: HTMLInputElement[];
     config?: IRadioGroupConfig;
 
-    constructor(element: HTMLElement, config?: IRadioGroupConfig) {
+    constructor(element: HTMLElement | string, config?: IRadioGroupConfig) {
         super({
             supportedConstraints: ["required"],
         });
 
-        this.element = element;
+        if (
+            !getElement(element) ||
+            !(getElement(element) instanceof HTMLElement)
+        ) {
+            throw new Error("Invalid element or selector for RadioGroup");
+        }
+
+        this.element = getElement(element) as HTMLElement;
+
         this.config = config;
 
         this.radioButtons = Array.from(

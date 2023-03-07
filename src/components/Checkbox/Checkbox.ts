@@ -1,3 +1,4 @@
+import { getElement } from "../../util";
 import {
     Input,
     TInputConstraintEntry,
@@ -18,12 +19,20 @@ export class Checkbox extends Input {
     element: HTMLInputElement;
     config?: ICheckboxConfig;
 
-    constructor(element: HTMLInputElement, config?: ICheckboxConfig) {
+    constructor(element: HTMLInputElement | string, config?: ICheckboxConfig) {
         super({
             supportedConstraints: ["required"],
         });
 
-        this.element = element;
+        if (
+            !getElement(element) ||
+            !(getElement(element) instanceof HTMLInputElement)
+        ) {
+            throw new Error("Invalid element or selector for Checkbox");
+        }
+
+        this.element = getElement(element) as HTMLInputElement;
+
         this.config = config;
 
         this.syncConstraints();

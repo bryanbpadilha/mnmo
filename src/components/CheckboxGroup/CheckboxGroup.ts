@@ -1,3 +1,4 @@
+import { getElement } from "../../util";
 import {
     Input,
     TInputConstraintEntry,
@@ -22,21 +23,29 @@ export class CheckboxGroup extends Input {
     element: HTMLElement;
     checkboxes: HTMLInputElement[];
 
-    constructor(element: HTMLElement, config?: ICheckboxGroupConfig) {
+    constructor(element: HTMLElement | string, config?: ICheckboxGroupConfig) {
         super({
             supportedConstraints: ["required"],
         });
 
-        this.syncConstraints();
+        if (
+            !getElement(element) ||
+            !(getElement(element) instanceof HTMLElement)
+        ) {
+            throw new Error("Invalid element or selector for CheckboxGroup");
+        }
+
+        this.element = getElement(element) as HTMLElement;
 
         this.config = config;
-        this.element = element;
 
         this.checkboxes = Array.from(
             this.element.querySelectorAll<HTMLInputElement>(
                 "input[type=checkbox]"
             )
         );
+
+        this.syncConstraints();
 
         Array.from(this.checkboxes).forEach((button) =>
             button.addEventListener("invalid", () => {

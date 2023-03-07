@@ -35,11 +35,38 @@ This is a test documentation explanation. It's pretty long. Or not.
         <div>Message</div>
         <textarea name="message" rows="5" required></textarea>
     </label>
+    <fieldset id="monster">
+        <legend>Choose your favorite monster</legend>
+        <label>
+            <input type="radio" name="monster" value="kraken">
+            <span>Kraken</span>
+        </label>
+        <label>
+            <input type="radio" name="monster" value="behemoth">
+            <span>Behemoth</span>
+        </label>
+    </fieldset>
+    <fieldset id="pets">
+        <legend>Pets</legend>
+        <label>
+            <input type="checkbox" name="pets" value="dog">
+            <span>Dog</span>
+        </label>
+        <label>
+            <input type="checkbox" name="pets" value="cat">
+            <span>Cat</span>
+        </label>
+    </fieldset>
+    <label>
+        <input type="checkbox" name="terms" required>
+        <span>Terms and conditions</span>
+    </label>
+    <br />
     <button type="submit">Submit</button>
 </form>
 
 <script>
-    const { Form, Textbox, Select } = window.mnmo;
+    const { Form, Textbox, Select, RadioGroup, CheckboxGroup, Checkbox } = window.mnmo;
 
     const form = new Form('form', {
         async onSubmit(form) {
@@ -54,6 +81,12 @@ This is a test documentation explanation. It's pretty long. Or not.
             valueAs: (value) => new Date(value)
         }),
 
-        new Textbox('[name=message]')
+        new Textbox('[name=message]'),
+
+        new RadioGroup('#monster'),
+
+        new CheckboxGroup('#pets'),
+        
+        new Checkbox('[name=terms]'),
     )
 </script>
