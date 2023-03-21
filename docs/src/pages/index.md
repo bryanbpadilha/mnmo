@@ -108,7 +108,7 @@ subtitle: This is a test page!
         }
     })
 
-    form.append(
+    form.append([
         new Select('[name=color]'),
 
         new Textbox('[name=date]', {
@@ -122,5 +122,7 @@ subtitle: This is a test page!
         new CheckboxGroup('#pets'),
         
         new Checkbox('[name=terms]'),
-    )
+    ])
+
+    console.log(form.getInput('message'));
 </script>

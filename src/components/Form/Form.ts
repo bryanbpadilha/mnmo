@@ -94,7 +94,7 @@ export class Form {
     }
 
     append(...inputs: Input[]) {
-        for (const input of inputs) {
+        for (const input of inputs.flat()) {
             if (input.form) {
                 throw new Error("An input can not be in two forms.");
             }
@@ -103,6 +103,10 @@ export class Form {
 
             this.inputs = this.inputs?.concat(input) ?? [input];
         }
+    }
+
+    getInput(name: string) {
+        return this.inputs?.filter((input) => input.name === name)[0];
     }
 
     get errors() {
