@@ -1,4 +1,5 @@
-import { getElement } from "../../util";
+import { selectElement } from "../../util";
+import type { TSelector } from "../../util/types";
 import {
     Input,
     TInputConstraintEntry,
@@ -19,19 +20,15 @@ export class Select extends Input {
     element: HTMLSelectElement;
     config?: ISelectConfig;
 
-    constructor(element: HTMLSelectElement | string, config?: ISelectConfig) {
+    constructor(element: TSelector<HTMLSelectElement>, config?: ISelectConfig) {
         super({
             supportedConstraints: ["required"],
         });
 
-        if (
-            !getElement(element) ||
-            !(getElement(element) instanceof HTMLSelectElement)
-        ) {
-            throw new Error("Invalid element or selector for Select");
-        }
-
-        this.element = getElement(element) as HTMLSelectElement;
+        this.element = selectElement<HTMLSelectElement>(
+            element,
+            HTMLSelectElement
+        );
 
         this.config = config;
 

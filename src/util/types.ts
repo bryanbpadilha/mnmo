@@ -1,1 +1,1 @@
-export type TSelector<T = HTMLElement> = T | string;
+export type TSelector<T extends HTMLElement> = T | string;

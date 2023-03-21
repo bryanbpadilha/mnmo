@@ -17,26 +17,40 @@ export const uid = (function () {
     };
 })();
 
-export const getElement = (value: string | HTMLElement) => {
-    if (value instanceof HTMLElement) return value;
-    return document.querySelector(value as string);
+// TODO: this should be a generic
+type TElementConstructor = {
+    new (): HTMLElement;
+    prototype: HTMLElement;
 };
 
-export const selectElement = <T = HTMLElement>(
-    element: TSelector<T>,
-    constructor = HTMLElement,
+export const selectElement = <T extends HTMLElement>(
+    selector: TSelector<T>,
+    constructor: TElementConstructor | TElementConstructor[],
     parent: Element = document.body
 ) => {
-    const selected =
-        element instanceof constructor
-            ? element
-            : parent.querySelector(element as string);
+    const isInstanceOfConstructor = (element: any) => {
+        if (!Array.isArray(constructor)) {
+            return element instanceof constructor;
+        }
 
-    if (!(selected instanceof constructor)) {
+        return constructor.filter((item) => element instanceof item).length > 0;
+    };
+
+    const element = isInstanceOfConstructor(selector)
+        ? selector
+        : parent.querySelector(selector as string);
+
+    if (!element) {
         throw new Error(
-            `Either did not found an element "${element}" inside of "${parent}", or the element found is not an instance of "${constructor}". This will generally happen if you initialize a component without a proper element, or if the element markup does not have the required children elements.`
+            `Did not found an element "${selector}" inside of "${parent}". This will generally happen if you initialize a component with an improper element, or if the element markup does not have the required children elements.`
         );
     }
 
-    return selected as T;
+    if (!isInstanceOfConstructor(element)) {
+        throw new Error(
+            `The element "${element}" selected as "${selector}" inside of "${parent}" is not an instance of "${constructor}". This will generally happen if you initialize a compoment with an improper element, or if the element markup does not have the required children elements.`
+        );
+    }
+
+    return element as T;
 };

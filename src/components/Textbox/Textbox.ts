@@ -1,4 +1,5 @@
-import { getElement } from "../../util";
+import { selectElement } from "../../util";
+import type { TSelector } from "../../util/types";
 import {
     Input,
     TInputConstraintEntry,
@@ -45,7 +46,7 @@ export class Textbox extends Input {
     mask?: string | ((value: string) => string) | null;
 
     constructor(
-        element: HTMLTextAreaElement | HTMLInputElement | string,
+        element: TSelector<HTMLTextAreaElement | HTMLInputElement>,
         config?: ITextboxConfig
     ) {
         super({
@@ -60,17 +61,10 @@ export class Textbox extends Input {
             ],
         });
 
-        if (
-            !getElement(element) ||
-            (!(getElement(element) instanceof HTMLInputElement) &&
-                !(getElement(element) instanceof HTMLTextAreaElement))
-        ) {
-            throw new Error("Invalid element or selector for Textbox");
-        }
-
-        this.element = getElement(element) as
-            | HTMLInputElement
-            | HTMLTextAreaElement;
+        this.element = selectElement<HTMLInputElement | HTMLTextAreaElement>(
+            element,
+            [HTMLInputElement, HTMLTextAreaElement]
+        );
 
         this.config = config;
         this.mask = this.config?.mask ?? this.element.getAttribute("mask");

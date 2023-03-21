@@ -1,4 +1,5 @@
-import { getElement } from "../../util";
+import { selectElement } from "../../util";
+import type { TSelector } from "../../util/types";
 import {
     Input,
     TInputConstraintEntry,
@@ -24,19 +25,12 @@ export class RadioGroup extends Input {
     radioButtons: HTMLInputElement[];
     config?: IRadioGroupConfig;
 
-    constructor(element: HTMLElement | string, config?: IRadioGroupConfig) {
+    constructor(element: TSelector<HTMLElement>, config?: IRadioGroupConfig) {
         super({
             supportedConstraints: ["required"],
         });
 
-        if (
-            !getElement(element) ||
-            !(getElement(element) instanceof HTMLElement)
-        ) {
-            throw new Error("Invalid element or selector for RadioGroup");
-        }
-
-        this.element = getElement(element) as HTMLElement;
+        this.element = selectElement<HTMLElement>(element, HTMLElement);
 
         this.config = config;
 

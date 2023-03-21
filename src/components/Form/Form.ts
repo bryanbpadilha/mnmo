@@ -1,5 +1,6 @@
 import type { Input } from "..";
-import { getElement } from "../../util";
+import { selectElement } from "../../util";
+import type { TSelector } from "../../util/types";
 
 export type TFormEvent = (form: Form) => void;
 export type TFormSubmitEvent = (form: Form) => Promise<void>;
@@ -20,12 +21,8 @@ export class Form {
     isSubmitted: boolean;
     isSubmitting: boolean;
 
-    constructor(element: HTMLFormElement | string, config?: IFormConfig) {
-        this.element = getElement(element) as HTMLFormElement;
-
-        if (!this.element || !(this.element instanceof HTMLFormElement)) {
-            throw new Error("Invalid element or selector for Form");
-        }
+    constructor(element: TSelector<HTMLFormElement>, config?: IFormConfig) {
+        this.element = selectElement<HTMLFormElement>(element, HTMLFormElement);
 
         this.config = config;
 

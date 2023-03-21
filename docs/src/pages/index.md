@@ -46,7 +46,7 @@ subtitle: This is a test page!
 
 ## Form/Inputs
 
-<form>
+<form name="test">
     <label>
       <div>Color</div> 
       <select name="color" required>
@@ -102,7 +102,7 @@ subtitle: This is a test page!
 <script>
     const { Form, Textbox, Select, RadioGroup, CheckboxGroup, Checkbox } = window.mnmo;
 
-    const form = new Form('form', {
+    const form = new Form('form[name=test]', {
         async onSubmit(form) {
             console.log(form);
         }
@@ -117,7 +117,7 @@ subtitle: This is a test page!
 
         new Textbox('[name=message]'),
 
-        new RadioGroup('#monster'),
+        new RadioGroup('#monster', { required: true }),
 
         new CheckboxGroup('#pets'),
         

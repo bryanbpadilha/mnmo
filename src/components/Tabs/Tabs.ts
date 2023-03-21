@@ -23,7 +23,7 @@ export class Tabs {
     currentTabPanel?: HTMLElement;
     selectedTabPanel?: HTMLElement;
 
-    constructor(element: TSelector, config?: ITabsConfig) {
+    constructor(element: TSelector<HTMLElement>, config?: ITabsConfig) {
         this.element = selectElement(element, HTMLElement);
         this.config = config;
 

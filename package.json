@@ -1,6 +1,6 @@
 {
     "name": "mnmo",
-    "version": "1.0.33",
+    "version": "1.0.34",
     "main": "./dist/index.min.js",
     "keywords": [],
     "author": {

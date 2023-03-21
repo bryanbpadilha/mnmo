@@ -1,4 +1,5 @@
-import { getElement } from "../../util";
+import { selectElement } from "../../util";
+import type { TSelector } from "../../util/types";
 import {
     Input,
     TInputConstraintEntry,
@@ -19,19 +20,18 @@ export class Checkbox extends Input {
     element: HTMLInputElement;
     config?: ICheckboxConfig;
 
-    constructor(element: HTMLInputElement | string, config?: ICheckboxConfig) {
+    constructor(
+        element: TSelector<HTMLInputElement>,
+        config?: ICheckboxConfig
+    ) {
         super({
             supportedConstraints: ["required"],
         });
 
-        if (
-            !getElement(element) ||
-            !(getElement(element) instanceof HTMLInputElement)
-        ) {
-            throw new Error("Invalid element or selector for Checkbox");
-        }
-
-        this.element = getElement(element) as HTMLInputElement;
+        this.element = selectElement<HTMLInputElement>(
+            element,
+            HTMLInputElement
+        );
 
         this.config = config;
 
