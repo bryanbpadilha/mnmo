@@ -4,13 +4,47 @@ title: Home
 subtitle: This is a test page!
 ---
 
-## Test component
+## Tabs
 
-This is a test documentation explanation. It's pretty long. Or not.
+<section id="example-tabs">
+    <div role="tablist">
+        <button role="tab">
+            <span class="tab-focus">Red</span>
+        </button> 
+        <button role="tab">
+            <span class="tab-focus">Green</span>
+        </button> 
+        <button role="tab">
+            <span class="tab-focus">Blue</span>
+        </button> 
+    </div>
+    <div role="tabpanel">
+        Red red red.
+    </div>
+    <div role="tabpanel">
+        Green green green.
+    </div>
+    <div role="tabpanel">
+        Blue blue blue.
+    </div>
+</section>
 
-```html
-<p>This is a test codeblock!</p>
-```
+<script>
+    const { Tabs } = window.mnmo;
+
+    const tabs = new Tabs('#example-tabs', {
+        onSelect(tabs) {
+            if (Math.random() > 0.5) {
+                tabs.preventSelection();
+                console.log('You shall not select!');
+            }
+        }
+    });
+
+    console.log(tabs);
+</script>
+
+## Form/Inputs
 
 <form>
     <label>
