@@ -47,10 +47,12 @@ export class Input {
     form?: Form;
 
     isTouched: boolean;
+    isValidated: boolean;
 
     constructor(properties: IInputProperties) {
         this.supportedConstraints = properties.supportedConstraints;
         this.isTouched = false;
+        this.isValidated = false;
     }
 
     protected emit(event: string) {
@@ -121,6 +123,8 @@ export class Input {
     }
 
     validate() {
+        this.isValidated = true;
+
         if (this.dynamicValidity && this.dynamicValidity.length > 0) {
             this.setCustomValidity(this.dynamicValidity);
         } else if (this.validityError) {
@@ -176,6 +180,7 @@ export class Input {
     }
 
     get error(): string {
+        if (!this.isValidated) this.validate();
         return this.elements[0].validationMessage;
     }
 

@@ -47,96 +47,66 @@ subtitle: This is a test page!
 ## Form/Inputs
 
 <form name="test">
-    <label>
-      <div>Color</div> 
-      <select name="color" required>
-        <option value="red">Red</option>
-        <option value="green">Green</option>
-        <option value="yellow">Yellow</option>
-      </select>
-    </label>
-    <label>
-        <div>Date</div>
+    <label class="input">
+        <div>Zip</div>
         <input
             type="text"
-            name="date"
-            mask="99/99/9999"
-            placeholder="MM/DD/YYYY"
-            required
+            name="zip"
         />
-    </label>
-    <label>
-        <div>Phone</div>
-        <input
-            type="tel"
-            name="phone"
-            mask="(999) 999-9999"
-            placeholder="(999) 999-9999"
-            required
-        />
-    </label>
-    <label>
-        <div>Message</div>
-        <textarea name="message" rows="5" required></textarea>
-    </label>
-    <fieldset id="monster">
-        <legend>Choose your favorite monster</legend>
-        <label>
-            <input type="radio" name="monster" value="kraken">
-            <span>Kraken</span>
-        </label>
-        <label>
-            <input type="radio" name="monster" value="behemoth">
-            <span>Behemoth</span>
-        </label>
-    </fieldset>
-    <fieldset id="pets">
-        <legend>Pets</legend>
-        <label>
-            <input type="checkbox" name="pets" value="dog">
-            <span>Dog</span>
-        </label>
-        <label>
-            <input type="checkbox" name="pets" value="cat">
-            <span>Cat</span>
-        </label>
-    </fieldset>
-    <label>
-        <input type="checkbox" name="terms" required>
-        <span>Terms and conditions</span>
     </label>
     <br />
     <button type="submit">Submit</button>
 </form>
 
 <script>
+    function updateFormErrors(form) {
+        if (!form.isSubmitted) return;
+
+        form.inputs.forEach((input) => {
+            const container = input.element.closest(".input");
+            let errorElement;
+
+            if (container.querySelector(".input__error")) {
+                errorElement = container.querySelector(".input__error");
+            } else {
+                errorElement = document.createElement("small");
+                errorElement.classList.add("input__error");
+                errorElement.setAttribute("aria-live", "polite");
+            }
+
+            if (!input.error || input.error.length == 0) {
+                errorElement.remove();
+                return;
+            }
+
+            errorElement.textContent = input.error;
+            container.append(errorElement);
+        });
+    }
+
+    function handleFormValidation(form, jumpToError) {
+        updateFormErrors(form);
+        if (form.isValid || !jumpToError) return;
+    }
+    
     const { Form, Textbox, Select, RadioGroup, CheckboxGroup, Checkbox } = window.mnmo;
 
     const form = new Form('form[name=test]', {
         async onSubmit(form) {
             console.log(form);
+        },
+
+        onInvalid(form) {
+            handleFormValidation(form)
         }
     })
 
     form.append([
-        new Select('[name=color]'),
-
-        new Textbox('[name=date]', {
-            valueAs: (value) => new Date(value),
-        }),
-
-        new Textbox('[name=phone]', {
-            onChange: (input) => console.log(input.value) 
-        }),
-
-        new Textbox('[name=message]'),
-
-        new RadioGroup('#monster', { required: true }),
-
-        new CheckboxGroup('#pets'),
-        
-        new Checkbox('[name=terms]'),
+        new Textbox('[name=zip]', {
+            required: true,
+            validationMessage: 'A ZIP code is required.',
+        })
     ])
 
-    console.log(form.getInput('message'));
+    console.log(form);
 </script>
