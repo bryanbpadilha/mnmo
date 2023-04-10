@@ -66,6 +66,16 @@ subtitle: This is a test page!
         />
     </label>
     <label>
+        <div>Phone</div>
+        <input
+            type="tel"
+            name="phone"
+            mask="(999) 999-9999"
+            placeholder="(999) 999-9999"
+            required
+        />
+    </label>
+    <label>
         <div>Message</div>
         <textarea name="message" rows="5" required></textarea>
     </label>
@@ -112,7 +122,11 @@ subtitle: This is a test page!
         new Select('[name=color]'),
 
         new Textbox('[name=date]', {
-            valueAs: (value) => new Date(value)
+            valueAs: (value) => new Date(value),
+        }),
+
+        new Textbox('[name=phone]', {
+            onChange: (input) => console.log(input.value) 
         }),
 
         new Textbox('[name=message]'),

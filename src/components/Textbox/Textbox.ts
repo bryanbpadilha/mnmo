@@ -82,9 +82,10 @@ export class Textbox extends Input {
         });
 
         this.element.addEventListener("input", (e) => {
-            this.handleChange();
-
-            if (!this.mask) return;
+            if (!this.mask) {
+                this.handleChange();
+                return;
+            }
 
             const value = this.element.value;
             const mask =
@@ -94,6 +95,8 @@ export class Textbox extends Input {
             restoreCursorPosition(value, mask, event, () => {
                 this.element.value = maskValue(value, mask, event);
             });
+
+            this.handleChange();
         });
     }
 
