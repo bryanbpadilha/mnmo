@@ -2,7 +2,7 @@ import { selectElement, uid } from "../../util";
 import type { TSelector } from "../../util/types";
 
 interface ITabsConfig {
-    onSelect?: (tabs: Tabs) => void;
+    onSelect?: (tabs: Tabs) => void | Promise<void>;
 }
 
 export class Tabs {
@@ -102,13 +102,13 @@ export class Tabs {
         this.handleSelection();
     }
 
-    private handleSelection() {
+    private async handleSelection() {
         if (!this.selectedTab || !this.selectedTabPanel) {
             throw Error("Tab selection out of range.");
         }
 
         if (this.config?.onSelect) {
-            this.config.onSelect(this);
+            await this.config.onSelect(this);
         }
 
         if (this.preventedSelection) {
