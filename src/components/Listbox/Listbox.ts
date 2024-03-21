@@ -21,7 +21,10 @@ export class Listbox {
         ) as HTMLElement[];
 
         for (const option of this.options) {
-            option.id = uid("listboxitem");
+            if (!option.id) {
+                option.id = uid("listboxitem");
+            }
+
             option.addEventListener("click", () => (this.selected = option));
         }
 
