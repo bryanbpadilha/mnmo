@@ -4,6 +4,32 @@ title: Home
 subtitle: This is a test page!
 ---
 
+## Listbox
+
+<ul id="example-listbox" role="listbox">
+    <li role="option" value="AL">
+        Alabama
+    </li>
+    <li role="option" value="AK">
+        Alaska
+    </li>
+    <li role="option" value="AZ">
+        Arizona
+    </li>
+    <li role="option" value="AR">
+        Arkansas
+    </li>
+</ul>
+
+<script>
+    const { Listbox } = window.mnmo;
+    new Listbox('#example-listbox', {
+        onSelect(listbox) {
+            console.log(listbox.value);
+        }
+    })
+</script>
+
 ## Tabs
 
 <section id="example-tabs">
@@ -34,10 +60,10 @@ subtitle: This is a test page!
 
     const tabs = new Tabs('#example-tabs', {
         onSelect(tabs) {
-            if (Math.random() > 0.5) {
-                tabs.preventSelection();
-                console.log('You shall not select!');
-            }
+            // if (Math.random() > 0.5) {
+            //     tabs.preventSelection();
+            //     console.log('You shall not select!');
+            // }
         }
     });
 
