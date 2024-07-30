@@ -1,7 +1,7 @@
 {
     "name": "mnmo",
     "version": "1.0.37",
-    "main": "./dist/index.min.js",
+    "main": "index.js",
     "keywords": [],
     "author": {
         "name": "Bryan B Padilha",
@@ -9,13 +9,12 @@
         "url": "https://bryanbpadilha.com/"
     },
     "files": [
-        "/dist"
+        "/lib"
     ],
     "license": "ISC",
     "description": "Headless UI in vanilla JS",
     "scripts": {
         "start": "concurrently npm:serve npm:docs",
-        "test": "node test.mjs",
         "rollup": "rollup -c",
         "build": "rm -rf ./dist && node esbuild.mjs",
         "serve": "esbuild ./src/index-dev.ts --bundle --outdir=www --watch --servedir=www",
