@@ -16,6 +16,7 @@
     "scripts": {
         "start": "concurrently npm:serve npm:docs",
         "test": "node test.mjs",
+        "rollup": "rollup -c",
         "build": "rm -rf ./dist && node esbuild.mjs",
         "serve": "esbuild ./src/index-dev.ts --bundle --outdir=www --watch --servedir=www",
         "prepublishOnly": "npm run build",
@@ -30,9 +31,16 @@
         "husky": "^8.0.3",
         "lint-staged": "^13.1.2",
         "prettier": "2.8.4",
+        "rollup": "^4.19.1",
         "typescript": "^4.9.5"
     },
     "lint-staged": {
         "**/*": "prettier --write --ignore-unknown"
+    },
+    "dependencies": {
+        "@rollup/plugin-babel": "^6.0.4",
+        "@rollup/plugin-node-resolve": "^15.2.3",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-typescript": "^11.1.6"
     }
 }
