@@ -1,8 +1,9 @@
 {
     "name": "mnmo",
     "version": "1.0.37",
-    "main": "/lib/main.umd.js",
-    "types": "/lib/main.d.ts",
+    "main": "lib/cjs/mnmo.js",
+    "types": "lib/mnmo.d.ts",
+    "typings": "lib/mnmo.d.ts",
     "keywords": [],
     "author": {
         "name": "Bryan B Padilha",
@@ -10,7 +11,7 @@
         "url": "https://bryanbpadilha.com/"
     },
     "files": [
-        "/lib"
+        "lib"
     ],
     "license": "ISC",
     "description": "Headless UI in vanilla JS",
@@ -32,6 +33,7 @@
         "lint-staged": "^13.1.2",
         "prettier": "2.8.4",
         "rollup": "^4.19.1",
+        "rollup-plugin-dts": "^6.1.1",
         "typescript": "^4.9.5"
     },
     "lint-staged": {
