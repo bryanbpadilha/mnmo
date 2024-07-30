@@ -3,30 +3,28 @@ import resolve from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 
-const extensions = [".js", ".ts"];
-
 export default {
-    input: "src/index.ts",
+    input: "src/main.ts",
     output: [
         {
-            file: "lib/bundles/bundle.esm.js",
+            file: "lib/main.esm.js",
             format: "esm",
             sourcemap: true,
         },
         {
-            file: "lib/bundles/bundle.esm.min.js",
+            file: "lib/main.esm.min.js",
             format: "esm",
             plugins: [terser()],
             sourcemap: true,
         },
         {
-            file: "lib/bundles/bundle.umd.js",
+            file: "lib/main.umd.js",
             format: "umd",
             name: "myLibrary",
             sourcemap: true,
         },
         {
-            file: "lib/bundles/bundle.umd.min.js",
+            file: "lib/main.umd.min.js",
             format: "umd",
             name: "myLibrary",
             plugins: [terser()],
