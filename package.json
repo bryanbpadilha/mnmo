@@ -4,6 +4,8 @@
     "main": "lib/cjs/mnmo.js",
     "types": "lib/mnmo.d.ts",
     "typings": "lib/mnmo.d.ts",
+    "module": "lib/esm/mnmo.js",
+    "unpkg": "lib/umd/mnmo.min.js",
     "keywords": [],
     "author": {
         "name": "Bryan B Padilha",
