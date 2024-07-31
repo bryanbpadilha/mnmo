@@ -113,6 +113,7 @@ declare class Input {
     get elements(): (HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement)[];
     get isValid(): boolean;
     get error(): string;
+    get id(): string;
     get name(): string;
     get value(): any;
     get errorConstraintMap(): IInputErrorConstraintMap;

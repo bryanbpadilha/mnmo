@@ -187,6 +187,10 @@ export class Input {
         return this.elements[0].validationMessage;
     }
 
+    get id(): string {
+        return this.elements[0].id;
+    }
+
     get name(): string {
         return this.elements[0].name;
     }

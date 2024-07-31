@@ -1,5 +1,5 @@
 import type { Input } from "..";
-import { selectElement } from "../../util";
+import { selectElement, uid } from "../../util";
 import type { TSelector } from "../../util/types";
 
 export type TFormEvent = (form: Form) => void;
@@ -114,12 +114,13 @@ export class Form {
         ) as HTMLInputElement[];
 
         for (const input of invalidElements) {
-            errors[input.name] = input.validationMessage;
+            errors[input.name ?? input.id ?? uid("input")] =
+                input.validationMessage;
         }
 
         if (this.inputs) {
             for (const input of this.inputs) {
-                errors[input.name] = input.error;
+                errors[input.name ?? input.id ?? uid("input")] = input.error;
             }
         }
 
