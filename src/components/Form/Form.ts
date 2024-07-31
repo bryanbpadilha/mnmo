@@ -102,7 +102,17 @@ export class Form {
         }
     }
 
-    getInput(name: string) {
+    getInput(nameOrId: string) {
+        return this.inputs?.filter(
+            (input) => input.name === nameOrId || input.id === nameOrId
+        )[0];
+    }
+
+    getInputById(id: string) {
+        return this.inputs?.filter((input) => input.id === id)[0];
+    }
+
+    getInputByName(name: string) {
         return this.inputs?.filter((input) => input.name === name)[0];
     }
 

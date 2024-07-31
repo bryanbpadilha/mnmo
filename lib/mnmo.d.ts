@@ -22,7 +22,9 @@ declare class Form {
     private handleSubmit;
     private handleInvalid;
     append(...inputs: Input[]): void;
-    getInput(name: string): Input | undefined;
+    getInput(nameOrId: string): Input | undefined;
+    getInputById(id: string): Input | undefined;
+    getInputByName(name: string): Input | undefined;
     get errors(): {
         [key: string]: string;
     };
@@ -80,7 +82,7 @@ type IInputErrorConstraintMap = Array<[
         "minLength"
     ]
 ][number]>;
-type TInputEvent<T> = (input: T) => void;
+type TInputEvent<T> = (input: T, form?: Form) => void;
 type TInputConstraintEntry<T> = T | {
     value: T;
     message: string;

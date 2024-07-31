@@ -28,7 +28,7 @@ export type IInputErrorConstraintMap = Array<
     ][number]
 >;
 
-export type TInputEvent<T> = (input: T) => void;
+export type TInputEvent<T> = (input: T, form?: Form) => void;
 
 export type TInputConstraintEntry<T> =
     | T
