@@ -102,18 +102,18 @@ export class Form {
         }
     }
 
-    getInput(nameOrId: string) {
-        return this.inputs?.filter(
-            (input) => input.name === nameOrId || input.id === nameOrId
-        )[0];
+    getInput(name: string) {
+        return this.inputs?.filter((input) => input.name === name)[0];
     }
 
     getInputById(id: string) {
         return this.inputs?.filter((input) => input.id === id)[0];
     }
 
-    getInputByName(name: string) {
-        return this.inputs?.filter((input) => input.name === name)[0];
+    getInputByAttribute(key: string, value: string) {
+        return this.inputs?.filter(
+            (input) => input.getAttribute(key) === value
+        )[0];
     }
 
     get errors() {

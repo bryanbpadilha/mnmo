@@ -151,6 +151,10 @@ export class Input {
         return this.elements.every((element) => element.reportValidity());
     }
 
+    getAttribute(key: string): any {
+        return this.elements[0].getAttribute(key);
+    }
+
     get dynamicValidity(): string | undefined {
         const validityFn = this.config?.dynamicValidity;
         return validityFn && validityFn(this, this.form ?? undefined);

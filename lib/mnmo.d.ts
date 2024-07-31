@@ -22,9 +22,9 @@ declare class Form {
     private handleSubmit;
     private handleInvalid;
     append(...inputs: Input[]): void;
-    getInput(nameOrId: string): Input | undefined;
+    getInput(name: string): Input | undefined;
     getInputById(id: string): Input | undefined;
-    getInputByName(name: string): Input | undefined;
+    getInputByAttribute(key: string, value: string): Input | undefined;
     get errors(): {
         [key: string]: string;
     };
@@ -108,6 +108,7 @@ declare class Input {
     setCustomValidity(validity: string): void;
     checkValidity(): boolean;
     reportValidity(): boolean;
+    getAttribute(key: string): any;
     get dynamicValidity(): string | undefined;
     get defaultValidationMessage(): string | undefined;
     get validity(): ValidityState;
