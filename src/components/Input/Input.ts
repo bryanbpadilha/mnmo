@@ -1,6 +1,6 @@
 import type { Form } from "..";
 
-export type TInputDynamicValidity = (value: any, context: unknown) => string;
+export type TInputDynamicValidity = (input: Input, form?: Form) => string;
 
 export type TInputConstraints = Array<
     [
@@ -45,7 +45,6 @@ export class Input {
     config?: Record<string, any>;
     supportedConstraints: IInputProperties["supportedConstraints"];
     form?: Form;
-
     isTouched: boolean;
     isValidated: boolean;
 
@@ -57,7 +56,7 @@ export class Input {
 
     protected emit(event: string) {
         if (this.config && this.config[event]) {
-            this.config[event](this);
+            this.config[event](this, this.form ?? undefined);
         }
     }
 
@@ -154,7 +153,7 @@ export class Input {
 
     get dynamicValidity(): string | undefined {
         const validityFn = this.config?.dynamicValidity;
-        return validityFn && validityFn(this.value, this.form?.values);
+        return validityFn && validityFn(this, this.form ?? undefined);
     }
 
     get defaultValidationMessage(): string | undefined {
@@ -171,7 +170,11 @@ export class Input {
         )[0];
     }
 
-    get elements(): (HTMLInputElement | HTMLSelectElement)[] {
+    get elements(): (
+        | HTMLInputElement
+        | HTMLSelectElement
+        | HTMLTextAreaElement
+    )[] {
         return [];
     }
 
