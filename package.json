@@ -19,6 +19,7 @@
     "description": "Headless UI in vanilla JS",
     "scripts": {
         "rollup": "rollup -c",
+        "build": "rm -rf lib && npm run rollup",
         "prepublishOnly": "npm run build",
         "docs": "astro dev --root ./docs",
         "prepare": "husky install"

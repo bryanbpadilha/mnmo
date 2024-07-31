@@ -34,38 +34,57 @@ declare class Form {
     get isValid(): boolean;
 }
 
-type TInputDynamicValidity = (value: any, context: unknown) => string;
-type TInputConstraints = Array<
+type TInputDynamicValidity = (input: Input, form?: Form) => string;
+type TInputConstraints = Array<[
+    "required",
+    "pattern",
+    "max",
+    "min",
+    "maxLength",
+    "minLength",
+    "step"
+][number]>;
+type IInputErrorConstraintMap = Array<[
     [
-        "required",
-        "pattern",
-        "max",
-        "min",
-        "maxLength",
-        "minLength",
+        "badInput"
+    ],
+    [
+        "typeMismatch"
+    ],
+    [
+        "valueMissing",
+        "required"
+    ],
+    [
+        "patternMismatch",
+        "pattern"
+    ],
+    [
+        "rangeOverflow",
+        "max"
+    ],
+    [
+        "rangeUnderflow",
+        "min"
+    ],
+    [
+        "stepMismatch",
         "step"
-    ][number]
->;
-type IInputErrorConstraintMap = Array<
+    ],
     [
-        ["badInput"],
-        ["typeMismatch"],
-        ["valueMissing", "required"],
-        ["patternMismatch", "pattern"],
-        ["rangeOverflow", "max"],
-        ["rangeUnderflow", "min"],
-        ["stepMismatch", "step"],
-        ["tooLong", "maxLength"],
-        ["tooShort", "minLength"]
-    ][number]
->;
+        "tooLong",
+        "maxLength"
+    ],
+    [
+        "tooShort",
+        "minLength"
+    ]
+][number]>;
 type TInputEvent<T> = (input: T) => void;
-type TInputConstraintEntry<T> =
-    | T
-    | {
-          value: T;
-          message: string;
-      };
+type TInputConstraintEntry<T> = T | {
+    value: T;
+    message: string;
+};
 interface IInputProperties {
     supportedConstraints: TInputConstraints;
 }
@@ -90,17 +109,8 @@ declare class Input {
     get dynamicValidity(): string | undefined;
     get defaultValidationMessage(): string | undefined;
     get validity(): ValidityState;
-    get validityError():
-        | ["badInput"]
-        | ["typeMismatch"]
-        | ["valueMissing", "required"]
-        | ["patternMismatch", "pattern"]
-        | ["rangeOverflow", "max"]
-        | ["rangeUnderflow", "min"]
-        | ["stepMismatch", "step"]
-        | ["tooLong", "maxLength"]
-        | ["tooShort", "minLength"];
-    get elements(): (HTMLInputElement | HTMLSelectElement)[];
+    get validityError(): ["badInput"] | ["typeMismatch"] | ["valueMissing", "required"] | ["patternMismatch", "pattern"] | ["rangeOverflow", "max"] | ["rangeUnderflow", "min"] | ["stepMismatch", "step"] | ["tooLong", "maxLength"] | ["tooShort", "minLength"];
+    get elements(): (HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement)[];
     get isValid(): boolean;
     get error(): string;
     get name(): string;
@@ -127,10 +137,7 @@ declare class Textbox extends Input {
     element: HTMLInputElement | HTMLTextAreaElement;
     config?: ITextboxConfig;
     mask?: string | ((value: string) => string) | null;
-    constructor(
-        element: TSelector<HTMLTextAreaElement | HTMLInputElement>,
-        config?: ITextboxConfig
-    );
+    constructor(element: TSelector<HTMLTextAreaElement | HTMLInputElement>, config?: ITextboxConfig);
     get elements(): HTMLInputElement[];
     get value(): any;
 }
@@ -247,36 +254,6 @@ type TElementConstructor = {
     new (): HTMLElement;
     prototype: HTMLElement;
 };
-declare const selectElement: <T extends HTMLElement>(
-    selector: TSelector<T>,
-    constructor: TElementConstructor | TElementConstructor[],
-    parent?: Element
-) => T;
+declare const selectElement: <T extends HTMLElement>(selector: TSelector<T>, constructor: TElementConstructor | TElementConstructor[], parent?: Element) => T;
 
-export {
-    Checkbox,
-    CheckboxGroup,
-    Form,
-    type ICheckboxConfig,
-    type ICheckboxGroupConfig,
-    type IFormConfig,
-    type IInputErrorConstraintMap,
-    type IInputProperties,
-    type IRadioGroupConfig,
-    type ISelectConfig,
-    type ITextboxConfig,
-    Input,
-    Listbox,
-    RadioGroup,
-    Select,
-    type TFormEvent,
-    type TFormSubmitEvent,
-    type TInputConstraintEntry,
-    type TInputConstraints,
-    type TInputDynamicValidity,
-    type TInputEvent,
-    Tabs,
-    Textbox,
-    selectElement,
-    uid,
-};
+export { Checkbox, CheckboxGroup, Form, type ICheckboxConfig, type ICheckboxGroupConfig, type IFormConfig, type IInputErrorConstraintMap, type IInputProperties, type IRadioGroupConfig, type ISelectConfig, type ITextboxConfig, Input, Listbox, RadioGroup, Select, type TFormEvent, type TFormSubmitEvent, type TInputConstraintEntry, type TInputConstraints, type TInputDynamicValidity, type TInputEvent, Tabs, Textbox, selectElement, uid };
