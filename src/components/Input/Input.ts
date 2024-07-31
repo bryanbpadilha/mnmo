@@ -151,7 +151,7 @@ export class Input {
         return this.elements.every((element) => element.reportValidity());
     }
 
-    getAttribute(key: string): any {
+    getAttribute(key: string) {
         return this.elements[0].getAttribute(key);
     }
 

@@ -108,7 +108,7 @@ declare class Input {
     setCustomValidity(validity: string): void;
     checkValidity(): boolean;
     reportValidity(): boolean;
-    getAttribute(key: string): any;
+    getAttribute(key: string): string | null;
     get dynamicValidity(): string | undefined;
     get defaultValidationMessage(): string | undefined;
     get validity(): ValidityState;
