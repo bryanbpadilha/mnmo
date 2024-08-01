@@ -101,7 +101,7 @@ declare class Input {
     protected handleChange(): void;
     protected handleInvalid(): void;
     protected syncConstraintEntry(key: string): void;
-    protected syncConstraints(): void;
+    syncConstraints(): void;
     protected getDefaultValidationMessage(): string;
     protected getCustomValidationMessage(key?: string): string;
     validate(): void;

@@ -97,7 +97,7 @@ export class Input {
         }
     }
 
-    protected syncConstraints() {
+    syncConstraints() {
         this.supportedConstraints.forEach((key) =>
             this.syncConstraintEntry(key)
         );
