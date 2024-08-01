@@ -7,3 +7,4 @@ export * from "./Checkbox";
 export * from "./Select";
 export * from "./Tabs";
 export * from "./Listbox";
+export * from "./FileInput";

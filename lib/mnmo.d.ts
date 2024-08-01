@@ -253,6 +253,20 @@ declare class Listbox {
     checkKeyDown(event: KeyboardEvent): void;
 }
 
+interface IFileInputConfig {
+    onChange?: TInputEvent<FileInput>;
+    onInvalid?: TInputEvent<FileInput>;
+    validationMessage?: string;
+    required?: TInputConstraintEntry<true>;
+    dynamicValidity?: TInputDynamicValidity;
+}
+declare class FileInput extends Input {
+    element: HTMLInputElement;
+    config?: IFileInputConfig;
+    constructor(element: TSelector<HTMLInputElement>, config?: IFileInputConfig);
+    get elements(): HTMLInputElement[];
+}
+
 declare const uid: (prefix?: string) => string;
 type TElementConstructor = {
     new (): HTMLElement;
@@ -260,4 +274,4 @@ type TElementConstructor = {
 };
 declare const selectElement: <T extends HTMLElement>(selector: TSelector<T>, constructor: TElementConstructor | TElementConstructor[], parent?: Element) => T;
 
-export { Checkbox, CheckboxGroup, Form, type ICheckboxConfig, type ICheckboxGroupConfig, type IFormConfig, type IInputErrorConstraintMap, type IInputProperties, type IRadioGroupConfig, type ISelectConfig, type ITextboxConfig, Input, Listbox, RadioGroup, Select, type TFormEvent, type TFormSubmitEvent, type TInputConstraintEntry, type TInputConstraints, type TInputDynamicValidity, type TInputEvent, Tabs, Textbox, selectElement, uid };
+export { Checkbox, CheckboxGroup, FileInput, Form, type ICheckboxConfig, type ICheckboxGroupConfig, type IFileInputConfig, type IFormConfig, type IInputErrorConstraintMap, type IInputProperties, type IRadioGroupConfig, type ISelectConfig, type ITextboxConfig, Input, Listbox, RadioGroup, Select, type TFormEvent, type TFormSubmitEvent, type TInputConstraintEntry, type TInputConstraints, type TInputDynamicValidity, type TInputEvent, Tabs, Textbox, selectElement, uid };
