@@ -1,7 +1,7 @@
 type TSelector<T extends HTMLElement> = T | string;
 
 type TFormEvent = (form: Form, event: Event) => void;
-type TFormSubmitEvent = (form: Form, event: SubmitEvent) => Promise<void>;
+type TFormSubmitEvent = (form: Form, event: SubmitEvent) => void | boolean;
 interface IFormConfig {
     onInvalid?: TFormEvent;
     onChange?: TFormEvent;
@@ -14,7 +14,6 @@ declare class Form {
     inputs?: Input[];
     isDirty: boolean;
     isSubmitted: boolean;
-    isSubmitting: boolean;
     constructor(element: TSelector<HTMLFormElement>, config?: IFormConfig);
     private emit;
     private handleInput;

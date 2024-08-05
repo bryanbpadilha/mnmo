@@ -6,7 +6,7 @@ export type TFormEvent = (form: Form, event: Event) => void;
 export type TFormSubmitEvent = (
     form: Form,
     event: SubmitEvent
-) => Promise<void>;
+) => void | boolean;
 
 export interface IFormConfig {
     onInvalid?: TFormEvent;
@@ -22,7 +22,6 @@ export class Form {
 
     isDirty: boolean;
     isSubmitted: boolean;
-    isSubmitting: boolean;
 
     constructor(element: TSelector<HTMLFormElement>, config?: IFormConfig) {
         this.element = selectElement<HTMLFormElement>(element, HTMLFormElement);
@@ -31,7 +30,6 @@ export class Form {
 
         this.isDirty = false;
         this.isSubmitted = false;
-        this.isSubmitting = false;
 
         this.element.addEventListener("input", (event) => {
             this.handleInput(event);
@@ -73,23 +71,15 @@ export class Form {
         this.emit<Event>("onChange", event);
     }
 
-    private async handleSubmit(event: SubmitEvent) {
+    private handleSubmit(event: SubmitEvent) {
         if (!this.isSubmitted) this.isSubmitted = true;
-
-        if (this.config && this.config.onSubmit) {
-            this.isSubmitting = true;
-            await this.emit<SubmitEvent>("onSubmit", event);
-            this.isSubmitting = false;
-        }
+        this.emit<SubmitEvent>("onSubmit", event);
     }
 
     private handleInvalid(event: Event) {
         if (!this.isSubmitted) this.isSubmitted = true;
-
-        if (this.config && this.config.onInvalid) {
-            event.preventDefault();
-            this.emit<Event>("onInvalid", event);
-        }
+        event.preventDefault();
+        this.emit<Event>("onInvalid", event);
     }
 
     append(...inputs: Input[]) {
