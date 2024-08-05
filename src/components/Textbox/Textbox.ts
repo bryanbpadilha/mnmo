@@ -77,13 +77,13 @@ export class Textbox extends Input {
             );
         }
 
-        this.element.addEventListener("invalid", () => {
-            this.handleInvalid();
+        this.element.addEventListener("invalid", (event) => {
+            this.handleInvalid(event);
         });
 
         this.element.addEventListener("input", (e) => {
             if (!this.mask) {
-                this.handleChange();
+                this.handleChange(e);
                 return;
             }
 
@@ -96,7 +96,7 @@ export class Textbox extends Input {
                 this.element.value = maskValue(value, mask, event);
             });
 
-            this.handleChange();
+            this.handleChange(e);
         });
     }
 

@@ -37,12 +37,12 @@ export class Checkbox extends Input {
 
         this.syncConstraints();
 
-        this.element.addEventListener("invalid", () => {
-            this.handleInvalid();
+        this.element.addEventListener("invalid", (event) => {
+            this.handleInvalid(event);
         });
 
-        this.element.addEventListener("input", () => {
-            this.handleChange();
+        this.element.addEventListener("input", (event) => {
+            this.handleChange(event);
         });
     }
 

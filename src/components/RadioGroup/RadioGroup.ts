@@ -41,14 +41,14 @@ export class RadioGroup extends Input {
         this.syncConstraints();
 
         Array.from(this.radioButtons).forEach((button) =>
-            button.addEventListener("invalid", () => {
-                this.handleInvalid();
+            button.addEventListener("invalid", (event) => {
+                this.handleInvalid(event);
             })
         );
 
         Array.from(this.radioButtons).forEach((button) =>
-            button.addEventListener("input", () => {
-                this.handleChange();
+            button.addEventListener("input", (event) => {
+                this.handleChange(event);
             })
         );
     }

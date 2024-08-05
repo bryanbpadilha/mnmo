@@ -54,21 +54,21 @@ export class Input {
         this.isValidated = false;
     }
 
-    protected emit(event: string) {
-        if (this.config && this.config[event]) {
-            this.config[event](this, this.form ?? undefined);
+    protected emit<T>(key: string, event: T) {
+        if (this.config && this.config[key]) {
+            this.config[key](this, this.form ?? undefined, event);
         }
     }
 
-    protected handleChange() {
+    protected handleChange(event: Event) {
         this.isTouched = true;
         this.validate();
-        this.emit("onChange");
+        this.emit<Event>("onChange", event);
     }
 
-    protected handleInvalid() {
+    protected handleInvalid(event: Event) {
         this.validate();
-        this.emit("onInvalid");
+        this.emit<Event>("onInvalid", event);
     }
 
     protected syncConstraintEntry(key: string) {

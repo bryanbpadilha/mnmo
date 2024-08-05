@@ -97,9 +97,9 @@ declare class Input {
     isTouched: boolean;
     isValidated: boolean;
     constructor(properties: IInputProperties);
-    protected emit(event: string): void;
-    protected handleChange(): void;
-    protected handleInvalid(): void;
+    protected emit<T>(key: string, event: T): void;
+    protected handleChange(event: Event): void;
+    protected handleInvalid(event: Event): void;
     protected syncConstraintEntry(key: string): void;
     syncConstraints(): void;
     protected getDefaultValidationMessage(): string;
