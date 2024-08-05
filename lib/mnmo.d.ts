@@ -14,11 +14,7 @@ declare class Form {
     inputs?: Input[];
     isDirty: boolean;
     isSubmitted: boolean;
-    eventHandlers?: [string, (event: Event) => void][];
     constructor(element: TSelector<HTMLFormElement>, config?: IFormConfig);
-    build(): void;
-    destroy(): void;
-    private addEventListener;
     private emit;
     private handleInput;
     private handleChange;
