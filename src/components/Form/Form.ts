@@ -22,34 +22,37 @@ export class Form {
 
     isDirty: boolean;
     isSubmitted: boolean;
+    eventHandlers?: [string, (event: Event) => void][];
 
     constructor(element: TSelector<HTMLFormElement>, config?: IFormConfig) {
         this.element = selectElement<HTMLFormElement>(element, HTMLFormElement);
-
         this.config = config;
-
         this.isDirty = false;
         this.isSubmitted = false;
+        this.build();
+    }
 
-        this.element.addEventListener("input", (event) => {
-            this.handleInput(event);
+    build() {
+        this.addEventListener("input", this.handleInput);
+        this.addEventListener("change", this.handleChange);
+        this.addEventListener("submit", this.handleSubmit);
+        this.addEventListener("invalid", this.handleInvalid, true);
+    }
+
+    destroy() {
+        this.eventHandlers?.forEach(([event, handler]) => {
+            this.element.removeEventListener(event, handler);
         });
+    }
 
-        this.element.addEventListener("change", (event) => {
-            this.handleChange(event);
-        });
-
-        this.element.addEventListener("submit", (event) => {
-            this.handleSubmit(event);
-        });
-
-        this.element.addEventListener(
-            "invalid",
-            (event) => {
-                this.handleInvalid(event);
-            },
-            true
-        );
+    private addEventListener(
+        event: string,
+        handler: Function,
+        capture = false
+    ) {
+        const fn = (event: Event) => handler(event);
+        this.eventHandlers?.push([event, fn]);
+        this.element.addEventListener(event, fn, capture);
     }
 
     private async emit<T>(key: keyof IFormConfig, event: T) {
