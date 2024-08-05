@@ -17,3 +17,4 @@ Non-breaking changes
 Breaking changes
 
 -   `dynamicValidity` on `Input` now uses `Input` and `Form` (instead of `value` and `context`)
+-   Remove `event.preventDefault()` call from `Form.handleSubmit`

@@ -77,7 +77,6 @@ export class Form {
         if (!this.isSubmitted) this.isSubmitted = true;
 
         if (this.config && this.config.onSubmit) {
-            event.preventDefault();
             this.isSubmitting = true;
             await this.emit<SubmitEvent>("onSubmit", event);
             this.isSubmitting = false;
