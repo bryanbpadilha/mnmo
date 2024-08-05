@@ -1,7 +1,7 @@
 type TSelector<T extends HTMLElement> = T | string;
 
-type TFormEvent = (form: Form) => void;
-type TFormSubmitEvent = (form: Form) => Promise<void>;
+type TFormEvent = (form: Form, event: Event) => void;
+type TFormSubmitEvent = (form: Form, event: SubmitEvent) => Promise<void>;
 interface IFormConfig {
     onInvalid?: TFormEvent;
     onChange?: TFormEvent;

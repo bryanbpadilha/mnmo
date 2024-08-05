@@ -2,8 +2,11 @@ import type { Input } from "..";
 import { selectElement, uid } from "../../util";
 import type { TSelector } from "../../util/types";
 
-export type TFormEvent = (form: Form) => void;
-export type TFormSubmitEvent = (form: Form) => Promise<void>;
+export type TFormEvent = (form: Form, event: Event) => void;
+export type TFormSubmitEvent = (
+    form: Form,
+    event: SubmitEvent
+) => Promise<void>;
 
 export interface IFormConfig {
     onInvalid?: TFormEvent;
@@ -31,11 +34,11 @@ export class Form {
         this.isSubmitting = false;
 
         this.element.addEventListener("input", (event) => {
-            this.handleInput();
+            this.handleInput(event);
         });
 
         this.element.addEventListener("change", (event) => {
-            this.handleChange();
+            this.handleChange(event);
         });
 
         this.element.addEventListener("submit", (event) => {
@@ -51,23 +54,23 @@ export class Form {
         );
     }
 
-    private async emit(event: keyof IFormConfig) {
-        if (this.config && this.config[event]) {
-            if (typeof this.config[event] === "function") {
-                await (this.config[event] as Function)(this);
+    private async emit<T>(key: keyof IFormConfig, event: T) {
+        if (this.config && this.config[key]) {
+            if (typeof this.config[key] === "function") {
+                await (this.config[key] as Function)(this, event);
             }
         }
     }
 
-    private handleInput() {
+    private handleInput(event: Event) {
         if (!this.isDirty) this.isDirty = true;
         this.inputs?.forEach((input) => input.validate());
-        this.emit("onInput");
+        this.emit<Event>("onInput", event);
     }
 
-    private handleChange() {
+    private handleChange(event: Event) {
         if (!this.isDirty) this.isDirty = true;
-        this.emit("onChange");
+        this.emit<Event>("onChange", event);
     }
 
     private async handleSubmit(event: SubmitEvent) {
@@ -76,7 +79,7 @@ export class Form {
         if (this.config && this.config.onSubmit) {
             event.preventDefault();
             this.isSubmitting = true;
-            await this.emit("onSubmit");
+            await this.emit<SubmitEvent>("onSubmit", event);
             this.isSubmitting = false;
         }
     }
@@ -86,7 +89,7 @@ export class Form {
 
         if (this.config && this.config.onInvalid) {
             event.preventDefault();
-            this.emit("onInvalid");
+            this.emit<Event>("onInvalid", event);
         }
     }
 
