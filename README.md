@@ -10,7 +10,8 @@ Non-breaking changes
 -   Added multiple format module bundling (`cjs`, `esm`, `umd`)
     -   I believe the `window.mnmo` imports should work fine (needs testing)
 -   Fallback to using input ID, or automatically generated `uid()` on `Form.errors`
--   Add `Input` events now receive both the `Input` and a corresponding `Form`, if it's available
+-   `Form` event handlers now receive `(form: Form, event: Event | SubmitEvent)`
+-   `Input` event handlers now receive `(input: Input, form?: Form, event: Event)`
 -   Add `Form.getInputById` and `Form.getInputByAttribute`
 
 Breaking changes
