@@ -4,10 +4,11 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>mnmo docs</title>
+        <link rel="stylesheet" href="/src/simple.css" />
         <link rel="stylesheet" href="/src/styles.css" />
     </head>
     <body>
-        <aside class="sidebar">
+        <header>
             <h1>mnmo</h1>
             <nav>
                 <a href="#textbox">Textbox</a>
@@ -15,13 +16,13 @@
                 <a href="#form">Form</a>
                 <a href="#tabs">Tabs</a>
             </nav>
-        </aside>
+        </header>
 
-        <main class="content">
+        <main>
             <section id="textbox">
                 <h2>Textbox</h2>
-                <div class="demo-grid">
-                    <div class="demo">
+                <div>
+                    <div>
                         <label>Plain Textbox</label>
                         <input
                             id="tb-plain"
@@ -32,7 +33,7 @@
                             placeholder="Type at least 3 chars"
                         />
                     </div>
-                    <div class="demo">
+                    <div>
                         <label>Masked Phone (attr mask)</label>
                         <input
                             id="tb-phone"
@@ -42,7 +43,7 @@
                             placeholder="(99) 99999-9999"
                         />
                     </div>
-                    <div class="demo">
+                    <div>
                         <label>Masked CPF (programmatic mask)</label>
                         <input
                             id="tb-cpf"
@@ -57,8 +58,8 @@
 
             <section id="combobox">
                 <h2>Combobox</h2>
-                <div class="demo-grid">
-                    <form id="demo-combobox-form" class="demo" novalidate>
+                <div>
+                    <form id="demo-combobox-form" novalidate>
                         <label>Color Combobox (required)</label>
                         <button
                             id="cb-color"
@@ -70,7 +71,6 @@
                         >
                             Select color
                         </button>
-                        <!-- Hidden input removed: Combobox controls value/validity directly -->
                         <div id="cb-color-popover" role="dialog" hidden>
                             <input
                                 id="cb-color-search"
@@ -87,7 +87,7 @@
                                 <div role="option" value="yellow">Yellow</div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div>
                             <button type="submit">Submit</button>
                         </div>
                     </form>
@@ -98,7 +98,7 @@
             <section id="form">
                 <h2>Form</h2>
                 <form id="demo-form" novalidate>
-                    <div class="row">
+                    <div>
                         <label
                             >Name
                             <input
@@ -109,13 +109,13 @@
                             />
                         </label>
                     </div>
-                    <div class="row">
+                    <div>
                         <label
                             >Email
                             <input type="email" name="email" required />
                         </label>
                     </div>
-                    <div class="row">
+                    <div>
                         <label
                             >Age
                             <input type="number" name="age" min="0" max="120" />
@@ -123,7 +123,7 @@
                     </div>
                     <button type="submit">Submit</button>
                 </form>
-                <div class="panels">
+                <div>
                     <div>
                         <h3>Values</h3>
                         <pre id="form-values" class="log"></pre>
@@ -137,7 +137,7 @@
 
             <section id="tabs">
                 <h2>Tabs</h2>
-                <div id="demo-tabs" class="tabs">
+                <div id="demo-tabs">
                     <div role="tablist" aria-label="Sample Tabs">
                         <button role="tab">One</button>
                         <button role="tab">Two</button>

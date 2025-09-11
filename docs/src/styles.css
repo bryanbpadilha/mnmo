@@ -1,209 +1,57 @@
-:root {
-    --bg: #0f1115;
-    --panel: #171a21;
-    --text: #e6edf3;
-    --muted: #9aa4b2;
-    --accent: #4ea1ff;
-    --border: #2a2f3a;
-}
-
-* {
-    box-sizing: border-box;
-}
 html,
 body {
-    height: 100%;
-}
-body {
-    margin: 0;
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
-        Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-    color: var(--text);
-    background: var(--bg);
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    grid-template-rows: 100%;
-}
-
-.sidebar {
-    border-right: 1px solid var(--border);
-    padding: 16px;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-}
-
-.sidebar h1 {
-    margin: 0 0 12px 0;
-    font-size: 18px;
-}
-
-.sidebar nav {
-    display: grid;
-    gap: 8px;
-}
-
-.sidebar a {
-    color: var(--text);
-    text-decoration: none;
-    padding: 6px 8px;
-    border-radius: 6px;
-}
-
-.sidebar a:hover {
-    background: var(--panel);
-}
-
-.content {
-    padding: 24px;
-    overflow: auto;
-}
-
-section {
-    margin-bottom: 48px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-}
-
-h2 {
-    margin: 0 0 12px 0;
-}
-
-.demo-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.demo {
-    padding: 12px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-}
-
-.demo input {
-    width: 100%;
-    margin-top: 6px;
-    padding: 8px 10px;
-    background: #0d0f14;
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    outline: none;
-}
-
-.demo input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(78, 161, 255, 0.15);
+    font-size: 15px;
 }
 
 .log {
-    margin-top: 12px;
-    padding: 12px;
-    background: #0d0f14;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    min-height: 80px;
-    max-height: 200px;
-    overflow: auto;
+    max-height: 20rem;
 }
 
-.row {
-    margin: 10px 0;
+button[role="combobox"] {
 }
-
-.panels {
-    margin-top: 12px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+button[role="combobox"]:focus-visible {
 }
-
-.tabs [role="tablist"] {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-.tabs [role="tab"] {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-.tabs [role="tabpanel"] {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-}
-
-/* Combobox demo styles */
-.demo button[role="combobox"] {
-    width: 100%;
-    margin-top: 6px;
-    padding: 8px 10px;
-    background: #0d0f14;
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    outline: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    cursor: pointer;
-}
-.demo button[role="combobox"]:focus-visible {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(78, 161, 255, 0.15);
-}
-.demo button[role="combobox"]::after {
+button[role="combobox"]::after {
     content: "▾";
-    opacity: 0.7;
-    font-size: 12px;
+    font-size: 1rem;
 }
 
 /* Popover/Dialog container driven by Floating UI (absolute positioned) */
-.demo [role="dialog"] {
-    background: var(--panel);
+[role="dialog"] {
+    background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     z-index: 50;
     min-width: 240px;
 }
 
 /* Search box inside popover */
-.demo [role="dialog"] input[role="combobox"] {
+[role="dialog"] input[role="combobox"] {
     width: 100%;
     margin: 4px 0 8px 0;
 }
 
 /* Listbox container */
-.demo [role="listbox"] {
+[role="listbox"] {
     max-height: 200px;
     overflow: auto;
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 4px;
-    background: #0d0f14;
+    background: var(--bg);
 }
 
 /* Options */
-.demo [role="option"] {
-    padding: 6px 8px;
-    border-radius: 6px;
+[role="option"] {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
     cursor: pointer;
 }
-.demo [role="option"]:hover {
-    background: rgba(255, 255, 255, 0.04);
+[role="option"]:hover {
+    background: var(--accent-bg);
 }
-.demo [role="option"][aria-selected="true"] {
-    background: rgba(78, 161, 255, 0.15);
-    border: 1px solid rgba(78, 161, 255, 0.5);
+[role="option"][aria-selected="true"] {
+    background: var(--accent);
+    color: var(--bg);
 }
