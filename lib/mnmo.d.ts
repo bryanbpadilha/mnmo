@@ -266,10 +266,58 @@ declare class FileInput extends Input {
     get elements(): HTMLInputElement[];
 }
 
+interface IPopoverConfig {
+    placement?: any;
+    offset?: number;
+    open?: boolean;
+    onOpen?: (popover: Popover) => void | Promise<void>;
+    onClose?: (popover: Popover) => void | Promise<void>;
+}
 declare class Popover {
+    reference: HTMLElement;
+    floating: HTMLElement;
+    config?: IPopoverConfig;
+    isOpen: boolean;
+    private cleanupAutoUpdate?;
+    private onDocumentClick;
+    private onDocumentKeydown;
+    constructor(reference: TSelector<HTMLElement>, floating: TSelector<HTMLElement>, config?: IPopoverConfig);
+    updatePosition(): Promise<void>;
+    private startAutoUpdate;
+    private stopAutoUpdate;
+    show(): void;
+    hide(): void;
+    toggle(): void;
 }
 
+interface IComboboxConfig {
+    onChange?: TInputEvent<Combobox>;
+    onInvalid?: TInputEvent<Combobox>;
+    validationMessage?: string;
+    required?: TInputConstraintEntry<true>;
+    dynamicValidity?: TInputDynamicValidity;
+    onOpen?: (combobox: Combobox) => void | Promise<void>;
+    onClose?: (combobox: Combobox) => void | Promise<void>;
+    filter?: (option: HTMLElement, query: string) => boolean;
+}
 declare class Combobox extends Input {
+    trigger: HTMLElement;
+    dialog: HTMLElement;
+    search: HTMLInputElement;
+    listbox: Listbox;
+    popover: Popover;
+    hiddenInput: HTMLInputElement;
+    pendingSelected: HTMLElement | null;
+    config?: IComboboxConfig;
+    constructor(trigger: TSelector<HTMLElement>, config?: IComboboxConfig);
+    private ensureHiddenInput;
+    private getVisibleOptions;
+    private applyFilter;
+    private commitSelection;
+    private updateValueFromSelected;
+    get elements(): HTMLInputElement[];
+    get value(): string;
+    private resetListboxState;
 }
 
 declare const uid: (prefix?: string) => string;
@@ -279,4 +327,4 @@ type TElementConstructor = {
 };
 declare const selectElement: <T extends HTMLElement>(selector: TSelector<T>, constructor: TElementConstructor | TElementConstructor[], parent?: Element) => T;
 
-export { Checkbox, CheckboxGroup, Combobox, FileInput, Form, type ICheckboxConfig, type ICheckboxGroupConfig, type IFileInputConfig, type IFormConfig, type IInputErrorConstraintMap, type IInputProperties, type IRadioGroupConfig, type ISelectConfig, type ITextboxConfig, Input, Listbox, Popover, RadioGroup, Select, type TFormEvent, type TFormSubmitEvent, type TInputConstraintEntry, type TInputConstraints, type TInputDynamicValidity, type TInputEvent, Tabs, Textbox, selectElement, uid };
+export { Checkbox, CheckboxGroup, Combobox, FileInput, Form, type ICheckboxConfig, type ICheckboxGroupConfig, type IComboboxConfig, type IFileInputConfig, type IFormConfig, type IInputErrorConstraintMap, type IInputProperties, type IPopoverConfig, type IRadioGroupConfig, type ISelectConfig, type ITextboxConfig, Input, Listbox, Popover, RadioGroup, Select, type TFormEvent, type TFormSubmitEvent, type TInputConstraintEntry, type TInputConstraints, type TInputDynamicValidity, type TInputEvent, Tabs, Textbox, selectElement, uid };

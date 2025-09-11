@@ -140,3 +140,70 @@ h2 {
     border-radius: 8px;
     margin-bottom: 8px;
 }
+
+/* Combobox demo styles */
+.demo button[role="combobox"] {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px 10px;
+    background: #0d0f14;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+}
+.demo button[role="combobox"]:focus-visible {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(78, 161, 255, 0.15);
+}
+.demo button[role="combobox"]::after {
+    content: "▾";
+    opacity: 0.7;
+    font-size: 12px;
+}
+
+/* Popover/Dialog container driven by Floating UI (absolute positioned) */
+.demo [role="dialog"] {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    z-index: 50;
+    min-width: 240px;
+}
+
+/* Search box inside popover */
+.demo [role="dialog"] input[role="combobox"] {
+    width: 100%;
+    margin: 4px 0 8px 0;
+}
+
+/* Listbox container */
+.demo [role="listbox"] {
+    max-height: 200px;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px;
+    background: #0d0f14;
+}
+
+/* Options */
+.demo [role="option"] {
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.demo [role="option"]:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+.demo [role="option"][aria-selected="true"] {
+    background: rgba(78, 161, 255, 0.15);
+    border: 1px solid rgba(78, 161, 255, 0.5);
+}
