@@ -306,18 +306,17 @@ declare class Combobox extends Input {
     search: HTMLInputElement;
     listbox: Listbox;
     popover: Popover;
-    hiddenInput: HTMLInputElement;
     pendingSelected: HTMLElement | null;
     config?: IComboboxConfig;
+    private _value;
     constructor(trigger: TSelector<HTMLElement>, config?: IComboboxConfig);
-    private ensureHiddenInput;
     private getVisibleOptions;
     private applyFilter;
     private commitSelection;
     private updateValueFromSelected;
+    private resetListboxState;
     get elements(): HTMLInputElement[];
     get value(): string;
-    private resetListboxState;
 }
 
 declare const uid: (prefix?: string) => string;

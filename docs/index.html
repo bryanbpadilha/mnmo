@@ -58,7 +58,7 @@
             <section id="combobox">
                 <h2>Combobox</h2>
                 <div class="demo-grid">
-                    <div class="demo">
+                    <form id="demo-combobox-form" class="demo" novalidate>
                         <label>Color Combobox (required)</label>
                         <button
                             id="cb-color"
@@ -70,12 +70,7 @@
                         >
                             Select color
                         </button>
-                        <input
-                            id="cb-color-value"
-                            type="hidden"
-                            name="color"
-                            required
-                        />
+                        <!-- Hidden input removed: Combobox controls value/validity directly -->
                         <div id="cb-color-popover" role="dialog" hidden>
                             <input
                                 id="cb-color-search"
@@ -92,7 +87,10 @@
                                 <div role="option" value="yellow">Yellow</div>
                             </div>
                         </div>
-                    </div>
+                        <div class="row">
+                            <button type="submit">Submit</button>
+                        </div>
+                    </form>
                 </div>
                 <pre id="log-combobox" class="log"></pre>
             </section>

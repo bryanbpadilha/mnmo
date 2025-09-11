@@ -12,34 +12,23 @@ import { Popover } from "../Popover";
 export interface IComboboxConfig {
     onChange?: TInputEvent<Combobox>;
     onInvalid?: TInputEvent<Combobox>;
-    // Constraints
     validationMessage?: string;
     required?: TInputConstraintEntry<true>;
     dynamicValidity?: TInputDynamicValidity;
-    // Behavior
     onOpen?: (combobox: Combobox) => void | Promise<void>;
     onClose?: (combobox: Combobox) => void | Promise<void>;
     filter?: (option: HTMLElement, query: string) => boolean;
 }
 
 export class Combobox extends Input {
-    // Trigger button that shows current value
     trigger: HTMLElement;
-    // Dialog container (popover content)
     dialog: HTMLElement;
-    // Search input inside dialog
     search: HTMLInputElement;
-    // Listbox container
     listbox: Listbox;
-    // Popover instance for positioning and open/close logic
     popover: Popover;
-    // Hidden input used for form integration and validation
-    hiddenInput: HTMLInputElement;
-
-    // Pending selection (not yet committed)
     pendingSelected: HTMLElement | null;
-
     config?: IComboboxConfig;
+    private _value: string;
 
     constructor(trigger: TSelector<HTMLElement>, config?: IComboboxConfig) {
         super({
@@ -48,8 +37,8 @@ export class Combobox extends Input {
 
         this.trigger = selectElement(trigger, HTMLElement);
         this.config = config;
+        this._value = "";
 
-        // Locate popover/dialog via aria-controls on trigger
         const popoverId = this.trigger.getAttribute("aria-controls");
         if (!popoverId) {
             throw new Error(
@@ -59,14 +48,19 @@ export class Combobox extends Input {
 
         this.dialog = selectElement<HTMLElement>("#" + popoverId, HTMLElement);
 
-        // Find search input inside the dialog
         this.search = selectElement<HTMLInputElement>(
             'input[role="combobox"]',
             HTMLInputElement,
             this.dialog
         );
 
-        // Find listbox via search aria-controls or first [role=listbox]
+        const derivedName =
+            (this.trigger as HTMLButtonElement).name ||
+            this.trigger.getAttribute("name") ||
+            this.trigger.getAttribute("id") ||
+            uid("combobox");
+        this.search.name = derivedName;
+
         const listboxId = this.search.getAttribute("aria-controls");
         const listboxEl = listboxId
             ? selectElement<HTMLElement>("#" + listboxId, HTMLElement)
@@ -76,48 +70,23 @@ export class Combobox extends Input {
                   this.dialog
               );
 
-        // Initialize Listbox
         this.listbox = new Listbox(listboxEl, {
             onSelect: () => {
-                // Only hold selection in memory; do not commit yet
                 this.pendingSelected = this.listbox.selected;
             },
         });
 
-        // Commit on option click
-        this.listbox.element.addEventListener("click", (e) => {
-            const option = (e.target as HTMLElement).closest(
-                '[role="option"]'
-            ) as HTMLElement | null;
-            if (option) {
-                // Ensure listbox and pending reflect the clicked option
-                this.listbox.selected = option;
-                this.pendingSelected = option;
-                this.commitSelection();
-            }
-        });
+        this.pendingSelected = this.listbox.selected ?? null;
 
-        // Initialize pending selection
-        this.pendingSelected = this.listbox.selected;
-
-        // Hidden input for form value and validity
-        this.hiddenInput = this.ensureHiddenInput();
-
-        // Sync constraints onto hidden input
-        this.syncConstraints();
-
-        // Accessibility states
         this.trigger.setAttribute("aria-haspopup", "dialog");
         this.trigger.setAttribute("aria-expanded", "false");
-        // The search is always expanded within the dialog list context
         this.search.setAttribute("aria-expanded", "true");
+        this.syncConstraints();
 
-        // Initialize Popover
         this.popover = new Popover(this.trigger, this.dialog, {
             open: false,
             onOpen: async () => {
                 this.trigger.setAttribute("aria-expanded", "true");
-                // Focus the search field when opened
                 queueMicrotask(() => this.search.focus());
                 if (this.config?.onOpen) await this.config.onOpen(this);
             },
@@ -128,17 +97,14 @@ export class Combobox extends Input {
             },
         });
 
-        // Wire events
-        this.hiddenInput.addEventListener("invalid", (event) => {
+        this.search.addEventListener("invalid", (event) => {
             this.handleInvalid(event);
         });
 
-        // Toggle on trigger click
         this.trigger.addEventListener("click", () => {
             this.popover.toggle();
         });
 
-        // Basic keyboard support on trigger
         this.trigger.addEventListener("keydown", (e) => {
             switch (e.key) {
                 case "Enter":
@@ -151,7 +117,6 @@ export class Combobox extends Input {
             }
         });
 
-        // Search/filter behavior
         this.search.addEventListener("input", () => {
             this.applyFilter(this.search.value);
         });
@@ -160,13 +125,11 @@ export class Combobox extends Input {
             switch (e.key) {
                 case "ArrowDown":
                 case "ArrowUp":
-                    // Delegate navigation to listbox
                     e.preventDefault();
                     this.listbox.checkKeyDown(e as KeyboardEvent);
                     break;
                 case "Enter":
                     e.preventDefault();
-                    // Commit current selection or first visible
                     if (!this.listbox.selected) {
                         const firstVisible = this.getVisibleOptions()[0];
                         if (firstVisible) {
@@ -184,33 +147,20 @@ export class Combobox extends Input {
             }
         });
 
-        // Initialize from pre-selected option (if any)
+        this.listbox.element.addEventListener("click", (e) => {
+            const option = (e.target as HTMLElement).closest(
+                '[role="option"]'
+            ) as HTMLElement | null;
+            if (option) {
+                this.listbox.selected = option;
+                this.pendingSelected = option;
+                this.commitSelection();
+            }
+        });
+
         if (this.listbox.selected) {
             this.updateValueFromSelected();
-        } else {
-            // Initialize trigger label if value present on hidden input
-            if (this.hiddenInput.value) {
-                this.trigger.textContent = this.hiddenInput.value;
-            }
         }
-    }
-
-    private ensureHiddenInput() {
-        // Try to find an existing hidden input immediately following the trigger
-        let hidden = this.trigger.nextElementSibling as HTMLInputElement | null;
-        if (!hidden || hidden.tagName !== "INPUT" || hidden.type !== "hidden") {
-            hidden = document.createElement("input");
-            hidden.type = "hidden";
-            // Derive name from trigger@name if present, otherwise from id, or generate
-            const name =
-                (this.trigger as HTMLButtonElement).name ||
-                this.trigger.getAttribute("name") ||
-                this.trigger.getAttribute("id") ||
-                uid("combobox");
-            hidden.name = name;
-            this.trigger.insertAdjacentElement("afterend", hidden);
-        }
-        return hidden;
     }
 
     private getVisibleOptions() {
@@ -240,10 +190,8 @@ export class Combobox extends Input {
             }
         }
 
-        // Refresh the listbox.options to include only visible options for keyboard nav
         this.listbox.options = this.getVisibleOptions();
 
-        // If current selected is hidden after filter, clear selection
         if (
             this.listbox.selected &&
             this.listbox.selected.hasAttribute("hidden")
@@ -254,7 +202,6 @@ export class Combobox extends Input {
 
     private commitSelection() {
         this.updateValueFromSelected();
-        // Emit a change event for Input semantics
         this.handleChange(new Event("change"));
     }
 
@@ -265,25 +212,16 @@ export class Combobox extends Input {
             this.listbox.selected?.textContent ??
             String(value);
 
-        this.hiddenInput.value = String(value);
-        // Update button text to show current selection
+        this._value = String(value);
+
         if (label) {
             this.trigger.textContent = label;
         }
-    }
 
-    // Input API integration
-
-    get elements() {
-        return [this.hiddenInput];
-    }
-
-    get value() {
-        return this.hiddenInput.value;
+        this.validate();
     }
 
     private resetListboxState() {
-        // Clear search and remove filters
         this.search.value = "";
         const allOptions = Array.from(
             this.listbox.element.querySelectorAll('[role="option"]')
@@ -293,11 +231,9 @@ export class Combobox extends Input {
             option.removeAttribute("hidden");
         }
 
-        // Refresh options set
         this.listbox.options = allOptions;
 
-        // Select the committed value, if any
-        const committed = this.hiddenInput.value;
+        const committed = this._value;
         if (committed) {
             const match = allOptions.find(
                 (o) => (o.getAttribute("value") ?? o.textContent) === committed
@@ -307,7 +243,16 @@ export class Combobox extends Input {
             this.listbox.selected = null;
         }
 
-        // Reset pending to current selected
         this.pendingSelected = this.listbox.selected;
+    }
+
+    // Input API integration
+    get elements() {
+        // Bind validity reporting to the search input
+        return [this.search];
+    }
+
+    get value() {
+        return this._value;
     }
 }

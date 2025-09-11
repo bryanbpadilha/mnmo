@@ -25,7 +25,6 @@ export function initFormDemo() {
 
     function render() {
         if (!formEl || !valuesEl || !errorsEl) return;
-
         valuesEl.textContent = JSON.stringify(form.values, null, 2);
         errorsEl.textContent = JSON.stringify(form.errors, null, 2);
     }
