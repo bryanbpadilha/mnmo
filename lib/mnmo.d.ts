@@ -266,6 +266,12 @@ declare class FileInput extends Input {
     get elements(): HTMLInputElement[];
 }
 
+declare class Popover {
+}
+
+declare class Combobox extends Input {
+}
+
 declare const uid: (prefix?: string) => string;
 type TElementConstructor = {
     new (): HTMLElement;
@@ -273,4 +279,4 @@ type TElementConstructor = {
 };
 declare const selectElement: <T extends HTMLElement>(selector: TSelector<T>, constructor: TElementConstructor | TElementConstructor[], parent?: Element) => T;
 
-export { Checkbox, CheckboxGroup, FileInput, Form, type ICheckboxConfig, type ICheckboxGroupConfig, type IFileInputConfig, type IFormConfig, type IInputErrorConstraintMap, type IInputProperties, type IRadioGroupConfig, type ISelectConfig, type ITextboxConfig, Input, Listbox, RadioGroup, Select, type TFormEvent, type TFormSubmitEvent, type TInputConstraintEntry, type TInputConstraints, type TInputDynamicValidity, type TInputEvent, Tabs, Textbox, selectElement, uid };
+export { Checkbox, CheckboxGroup, Combobox, FileInput, Form, type ICheckboxConfig, type ICheckboxGroupConfig, type IFileInputConfig, type IFormConfig, type IInputErrorConstraintMap, type IInputProperties, type IRadioGroupConfig, type ISelectConfig, type ITextboxConfig, Input, Listbox, Popover, RadioGroup, Select, type TFormEvent, type TFormSubmitEvent, type TInputConstraintEntry, type TInputConstraints, type TInputDynamicValidity, type TInputEvent, Tabs, Textbox, selectElement, uid };

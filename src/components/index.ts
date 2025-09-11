@@ -8,3 +8,5 @@ export * from "./Select";
 export * from "./Tabs";
 export * from "./Listbox";
 export * from "./FileInput";
+export * from "./Popover";
+export * from "./Combobox";

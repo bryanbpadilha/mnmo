@@ -1,4 +1,4 @@
-import { Textbox } from "mnmo";
+import { Textbox } from "../mnmo";
 import { createLogger } from "../utils/logger";
 
 export function initTextboxDemo() {

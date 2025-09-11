@@ -42,5 +42,8 @@
     },
     "lint-staged": {
         "**/*": "prettier --write --ignore-unknown"
+    },
+    "dependencies": {
+        "@floating-ui/dom": "^1.7.4"
     }
 }

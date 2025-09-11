@@ -1,4 +1,4 @@
-import { Tabs } from "mnmo";
+import { Tabs } from "../mnmo";
 import { createLogger } from "../utils/logger";
 
 export function initTabsDemo() {
