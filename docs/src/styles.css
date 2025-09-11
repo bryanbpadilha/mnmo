@@ -1,0 +1,142 @@
+:root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --text: #e6edf3;
+    --muted: #9aa4b2;
+    --accent: #4ea1ff;
+    --border: #2a2f3a;
+}
+
+* {
+    box-sizing: border-box;
+}
+html,
+body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+        Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    color: var(--text);
+    background: var(--bg);
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: 100%;
+}
+
+.sidebar {
+    border-right: 1px solid var(--border);
+    padding: 16px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.sidebar h1 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+}
+
+.sidebar nav {
+    display: grid;
+    gap: 8px;
+}
+
+.sidebar a {
+    color: var(--text);
+    text-decoration: none;
+    padding: 6px 8px;
+    border-radius: 6px;
+}
+
+.sidebar a:hover {
+    background: var(--panel);
+}
+
+.content {
+    padding: 24px;
+    overflow: auto;
+}
+
+section {
+    margin-bottom: 48px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+h2 {
+    margin: 0 0 12px 0;
+}
+
+.demo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.demo {
+    padding: 12px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.demo input {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px 10px;
+    background: #0d0f14;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+}
+
+.demo input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(78, 161, 255, 0.15);
+}
+
+.log {
+    margin-top: 12px;
+    padding: 12px;
+    background: #0d0f14;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-height: 80px;
+    max-height: 200px;
+    overflow: auto;
+}
+
+.row {
+    margin: 10px 0;
+}
+
+.panels {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.tabs [role="tablist"] {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.tabs [role="tab"] {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.tabs [role="tabpanel"] {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}

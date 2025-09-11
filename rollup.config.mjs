@@ -31,7 +31,13 @@ export default [
                 sourcemap: true,
             },
         ],
-        plugins: [resolve(), typescript()],
+        plugins: [
+            resolve(),
+            typescript({
+                tsconfig: "./tsconfig.json",
+                exclude: ["docs/**", "lib/**", "node_modules/**"],
+            }),
+        ],
     },
     {
         input: "src/main.ts",
@@ -44,6 +50,7 @@ export default [
         plugins: [
             dts({
                 include: ["src"],
+                exclude: ["docs/**", "lib/**", "node_modules/**"],
             }),
         ],
     },

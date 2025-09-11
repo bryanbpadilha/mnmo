@@ -1,0 +1,16 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "strict": true,
+        "baseUrl": ".",
+        "paths": {
+            "mnmo": ["../src/main.ts"],
+            "mnmo/*": ["../src/*"]
+        },
+        "types": []
+    },
+    "include": ["src", "../src/**/*.ts"]
+}

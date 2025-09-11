@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>mnmo docs</title>
+        <link rel="stylesheet" href="/src/styles.css" />
+    </head>
+    <body>
+        <aside class="sidebar">
+            <h1>mnmo</h1>
+            <nav>
+                <a href="#textbox">Textbox</a>
+                <a href="#form">Form</a>
+                <a href="#tabs">Tabs</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <section id="textbox">
+                <h2>Textbox</h2>
+                <div class="demo-grid">
+                    <div class="demo">
+                        <label>Plain Textbox</label>
+                        <input
+                            id="tb-plain"
+                            type="text"
+                            name="plain"
+                            required
+                            minlength="3"
+                            placeholder="Type at least 3 chars"
+                        />
+                    </div>
+                    <div class="demo">
+                        <label>Masked Phone (attr mask)</label>
+                        <input
+                            id="tb-phone"
+                            type="tel"
+                            name="phone"
+                            mask="(99) 99999-9999"
+                            placeholder="(99) 99999-9999"
+                        />
+                    </div>
+                    <div class="demo">
+                        <label>Masked CPF (programmatic mask)</label>
+                        <input
+                            id="tb-cpf"
+                            type="text"
+                            name="cpf"
+                            placeholder="999.999.999-99"
+                        />
+                    </div>
+                </div>
+                <pre id="log-textbox" class="log"></pre>
+            </section>
+
+            <section id="form">
+                <h2>Form</h2>
+                <form id="demo-form" novalidate>
+                    <div class="row">
+                        <label
+                            >Name
+                            <input
+                                type="text"
+                                name="name"
+                                required
+                                minlength="2"
+                            />
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label
+                            >Email
+                            <input type="email" name="email" required />
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label
+                            >Age
+                            <input type="number" name="age" min="0" max="120" />
+                        </label>
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+                <div class="panels">
+                    <div>
+                        <h3>Values</h3>
+                        <pre id="form-values" class="log"></pre>
+                    </div>
+                    <div>
+                        <h3>Errors</h3>
+                        <pre id="form-errors" class="log"></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tabs">
+                <h2>Tabs</h2>
+                <div id="demo-tabs" class="tabs">
+                    <div role="tablist" aria-label="Sample Tabs">
+                        <button role="tab">One</button>
+                        <button role="tab">Two</button>
+                        <button role="tab">Three</button>
+                    </div>
+                    <div role="tabpanel">Panel one</div>
+                    <div role="tabpanel">Panel two</div>
+                    <div role="tabpanel">Panel three</div>
+                </div>
+                <pre id="log-tabs" class="log"></pre>
+            </section>
+        </main>
+
+        <script type="module" src="/src/main.ts"></script>
+    </body>
+</html>

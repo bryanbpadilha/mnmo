@@ -21,7 +21,10 @@
         "rollup": "rollup -c",
         "build": "rm -rf lib && npm run rollup",
         "prepublishOnly": "npm run build",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "docs:dev": "vite docs",
+        "docs:build": "vite build docs",
+        "docs:preview": "vite preview docs"
     },
     "devDependencies": {
         "@rollup/plugin-node-resolve": "^15.2.3",
@@ -34,7 +37,8 @@
         "prettier": "2.8.4",
         "rollup": "^4.19.1",
         "rollup-plugin-dts": "^6.1.1",
-        "typescript": "^4.9.5"
+        "typescript": "^4.9.5",
+        "vite": "^4.5.0"
     },
     "lint-staged": {
         "**/*": "prettier --write --ignore-unknown"
