@@ -21,15 +21,12 @@
         "rollup": "rollup -c",
         "build": "rm -rf lib && npm run rollup",
         "prepublishOnly": "npm run build",
-        "docs": "astro dev --root ./docs",
         "prepare": "husky install"
     },
     "devDependencies": {
-        "@astrojs/mdx": "^0.17.2",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
         "@rollup/plugin-typescript": "^11.1.6",
-        "astro": "^2.0.16",
         "concurrently": "^7.6.0",
         "esbuild": "^0.17.6",
         "husky": "^8.0.3",
