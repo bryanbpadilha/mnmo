@@ -306,6 +306,7 @@ declare class Combobox extends Input {
     search: HTMLInputElement;
     listbox: Listbox;
     popover: Popover;
+    memInput: HTMLInputElement;
     pendingSelected: HTMLElement | null;
     config?: IComboboxConfig;
     private _value;
@@ -315,6 +316,8 @@ declare class Combobox extends Input {
     private commitSelection;
     private updateValueFromSelected;
     private resetListboxState;
+    syncConstraints(): void;
+    validate(): void;
     get elements(): HTMLInputElement[];
     get value(): string;
 }

@@ -26,6 +26,7 @@ export class Combobox extends Input {
     search: HTMLInputElement;
     listbox: Listbox;
     popover: Popover;
+    memInput: HTMLInputElement; // In-memory input used only for validity/constraints integration
     pendingSelected: HTMLElement | null;
     config?: IComboboxConfig;
     private _value: string;
@@ -59,7 +60,11 @@ export class Combobox extends Input {
             this.trigger.getAttribute("name") ||
             this.trigger.getAttribute("id") ||
             uid("combobox");
-        this.search.name = derivedName;
+
+        // Create in-memory input for validity handling and Form integration (not attached to DOM)
+        this.memInput = document.createElement("input");
+        this.memInput.type = "text";
+        this.memInput.name = derivedName;
 
         const listboxId = this.search.getAttribute("aria-controls");
         const listboxEl = listboxId
@@ -246,10 +251,49 @@ export class Combobox extends Input {
         this.pendingSelected = this.listbox.selected;
     }
 
-    // Input API integration
+    // Apply constraints/messages to the in-memory input (not the search field)
+    syncConstraints() {
+        // Clear existing attributes
+        this.memInput.removeAttribute("required");
+        this.memInput.removeAttribute("required-message");
+        this.memInput.removeAttribute("validation-message");
+
+        // Determine "required" from config or trigger attribute
+        let required = false;
+        let requiredMessage: string | undefined;
+
+        const req = this.config?.required;
+        if (req) {
+            if (typeof req === "object") {
+                required = !!req.value;
+                requiredMessage = req.message;
+            } else {
+                required = true;
+            }
+        } else if (this.trigger.hasAttribute("required")) {
+            required = true;
+        }
+
+        if (required) this.memInput.setAttribute("required", "true");
+        if (requiredMessage)
+            this.memInput.setAttribute("required-message", requiredMessage);
+        if (this.config?.validationMessage) {
+            this.memInput.setAttribute(
+                "validation-message",
+                this.config.validationMessage
+            );
+        }
+    }
+
+    // Validate using the committed value mirrored into the in-memory input
+    validate() {
+        this.memInput.value = this._value ?? "";
+        super.validate();
+    }
+
     get elements() {
-        // Bind validity reporting to the search input
-        return [this.search];
+        // Bind validity/constraints to the in-memory input
+        return [this.memInput];
     }
 
     get value() {
