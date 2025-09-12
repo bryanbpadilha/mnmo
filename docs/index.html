@@ -80,12 +80,12 @@
                                 aria-controls="cb-color-listbox"
                                 placeholder="Search color..."
                             />
-                            <div id="cb-color-listbox" role="listbox">
-                                <div role="option" value="red">Red</div>
-                                <div role="option" value="blue">Blue</div>
-                                <div role="option" value="green">Green</div>
-                                <div role="option" value="yellow">Yellow</div>
-                            </div>
+                            <ol id="cb-color-listbox" role="listbox">
+                                <li role="option" value="red">Red</li>
+                                <li role="option" value="blue">Blue</li>
+                                <li role="option" value="green">Green</li>
+                                <li role="option" value="yellow">Yellow</li>
+                            </ol>
                         </div>
                         <div>
                             <button type="submit">Submit</button>
@@ -148,6 +148,30 @@
                     <div role="tabpanel">Panel three</div>
                 </div>
                 <pre id="log-tabs" class="log"></pre>
+            </section>
+
+            <section id="listbox">
+                <h2>Listbox</h2>
+                <div id="demo-listbox" role="listbox">
+                    <div role="group" aria-labelledby="colors-label">
+                        <h3 id="colors-label">Colors</h3>
+                        <ol role="presentation">
+                            <li role="option" value="red">Red</li>
+                            <li role="option" value="blue">Blue</li>
+                            <li role="option" value="green">Green</li>
+                            <li role="option" value="yellow">Yellow</li>
+                        </ol>
+                    </div>
+                    <div role="group" aria-labelledby="animals-label">
+                        <h3 id="animals-label">Animals</h3>
+                        <ol role="presentation">
+                            <li role="option" value="dogs">Dogs</li>
+                            <li role="option" value="cats">Blue</li>
+                            <li role="option" value="parrots">Parrots</li>
+                            <li role="option" value="turtles">Turtles</li>
+                        </ol>
+                    </div>
+                </div>
             </section>
         </main>
 

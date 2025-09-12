@@ -62,6 +62,9 @@ export class Listbox {
             (this.selected as HTMLElement).id
         );
 
+        // Ensure the selected option is visible within the listbox container
+        this.scrollSelectedIntoView();
+
         if (this.config?.onSelect) {
             this.config.onSelect(this);
         }
@@ -89,14 +92,19 @@ export class Listbox {
         switch (event.key) {
             case "ArrowDown":
                 event.preventDefault();
-                console.log("ArrowDown");
                 this.selected = this.options[next];
                 break;
             case "ArrowUp":
                 event.preventDefault();
-                console.log("ArrowUp");
                 this.selected = this.options[previous];
                 break;
         }
+    }
+
+    private scrollSelectedIntoView() {
+        const container = this.element;
+        const option = this._selected;
+        if (!container || !option) return;
+        option.scrollIntoView({ block: "nearest", inline: "nearest" });
     }
 }

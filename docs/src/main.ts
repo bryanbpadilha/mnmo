@@ -3,10 +3,12 @@ import { initTextboxDemo } from "./demos/textbox";
 import { initComboboxDemo } from "./demos/combobox";
 import { initFormDemo } from "./demos/form";
 import { initTabsDemo } from "./demos/tabs";
+import { initListboxDemo } from "./demos/listbox";
 
 document.addEventListener("DOMContentLoaded", () => {
     initTextboxDemo();
     initComboboxDemo();
     initFormDemo();
     initTabsDemo();
+    initListboxDemo();
 });

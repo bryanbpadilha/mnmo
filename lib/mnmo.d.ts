@@ -250,6 +250,7 @@ declare class Listbox {
     set selected(selectedOption: HTMLElement | null);
     get value(): string | null;
     checkKeyDown(event: KeyboardEvent): void;
+    private scrollSelectedIntoView;
 }
 
 interface IFileInputConfig {

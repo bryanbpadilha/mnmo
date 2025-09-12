@@ -42,6 +42,14 @@ button[role="combobox"]::after {
     background: var(--bg);
 }
 
+ol[role="listbox"],
+ul[role="listbox"],
+[role="listbox"] ol,
+[role="listbox"] ul {
+    list-style: none;
+    padding: 0;
+}
+
 /* Options */
 [role="option"] {
     padding: 0.25rem 0.5rem;
