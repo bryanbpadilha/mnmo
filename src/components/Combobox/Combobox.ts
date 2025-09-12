@@ -180,25 +180,117 @@ export class Combobox extends Input {
 
     private applyFilter(query: string) {
         const normalized = query.trim().toLowerCase();
+        const root = this.listbox.element;
+
         const allOptions = Array.from(
-            this.listbox.element.querySelectorAll('[role="option"]')
+            root.querySelectorAll('[role="option"]')
+        ) as HTMLElement[];
+        const allGroups = Array.from(
+            root.querySelectorAll('[role="group"]')
         ) as HTMLElement[];
 
-        for (const option of allOptions) {
-            const shouldShow =
-                this.config?.filter?.(option, query) ??
-                option.textContent?.toLowerCase().includes(normalized) ??
-                false;
+        // If query is empty, show everything (both options and groups)
+        if (normalized.length === 0) {
+            for (const group of allGroups) {
+                group.removeAttribute("hidden");
+            }
+            for (const option of allOptions) {
+                option.removeAttribute("hidden");
+            }
 
-            if (normalized.length === 0 || shouldShow) {
+            this.listbox.options = this.getVisibleOptions();
+
+            if (
+                this.listbox.selected &&
+                this.listbox.selected.hasAttribute("hidden")
+            ) {
+                this.listbox.selected = null;
+            }
+            return;
+        }
+
+        const visibleOptions = new Set<HTMLElement>();
+
+        const optionMatches = (option: HTMLElement) => {
+            const custom = this.config?.filter?.(option, query);
+            if (custom !== undefined && custom !== null) return custom;
+            const text = option.textContent?.toLowerCase() ?? "";
+            return text.includes(normalized);
+        };
+
+        const getGroupLabel = (group: HTMLElement) => {
+            let label = "";
+
+            const labelledby = group.getAttribute("aria-labelledby");
+            if (labelledby) {
+                for (const id of labelledby.split(/\s+/)) {
+                    const el = document.getElementById(id);
+                    if (el?.textContent) label += el.textContent + " ";
+                }
+            }
+
+            const ariaLabel = group.getAttribute("aria-label");
+            if (ariaLabel) label += ariaLabel + " ";
+
+            const heading = group.querySelector(
+                "[role='heading'], h1, h2, h3, h4, h5, h6"
+            ) as HTMLElement | null;
+            if (heading?.textContent) label += heading.textContent + " ";
+
+            return label.trim().toLowerCase();
+        };
+
+        // 1) If a group heading matches, show all options (and nested groups) under it
+        for (const group of allGroups) {
+            const label = getGroupLabel(group);
+            if (label && label.includes(normalized)) {
+                const subGroups = Array.from(
+                    group.querySelectorAll('[role="group"]')
+                ) as HTMLElement[];
+                const subOptions = Array.from(
+                    group.querySelectorAll('[role="option"]')
+                ) as HTMLElement[];
+
+                // Mark entire subtree as visible
+                subOptions.forEach((o) => visibleOptions.add(o));
+
+                // Also ensure ancestors of this group become visible through options ancestry step
+                // (handled below when applying visibility and computing group visibility)
+            }
+        }
+
+        // 2) If individual options match, show only those options
+        for (const option of allOptions) {
+            if (optionMatches(option)) {
+                visibleOptions.add(option);
+            }
+        }
+
+        // Apply visibility to options
+        for (const option of allOptions) {
+            if (visibleOptions.has(option)) {
                 option.removeAttribute("hidden");
             } else {
                 option.setAttribute("hidden", "true");
             }
         }
 
+        // Apply visibility to groups: visible if the group contains any visible (not hidden) option
+        for (const group of allGroups) {
+            const hasVisibleOption = Array.from(
+                group.querySelectorAll('[role="option"]')
+            ).some((o) => !o.hasAttribute("hidden"));
+            if (hasVisibleOption) {
+                group.removeAttribute("hidden");
+            } else {
+                group.setAttribute("hidden", "true");
+            }
+        }
+
+        // Refresh listbox options to only include visible options
         this.listbox.options = this.getVisibleOptions();
 
+        // Clear selection if it became hidden
         if (
             this.listbox.selected &&
             this.listbox.selected.hasAttribute("hidden")
@@ -233,13 +325,22 @@ export class Combobox extends Input {
         const allOptions = Array.from(
             this.listbox.element.querySelectorAll('[role="option"]')
         ) as HTMLElement[];
+        const allGroups = Array.from(
+            this.listbox.element.querySelectorAll('[role="group"]')
+        ) as HTMLElement[];
 
+        // Unhide everything
+        for (const group of allGroups) {
+            group.removeAttribute("hidden");
+        }
         for (const option of allOptions) {
             option.removeAttribute("hidden");
         }
 
+        // Reset options list to all options
         this.listbox.options = allOptions;
 
+        // Restore committed selection if any
         const committed = this._value;
         if (committed) {
             const match = allOptions.find(
