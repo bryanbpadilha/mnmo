@@ -60,27 +60,50 @@
                 <h2>Combobox</h2>
                 <div>
                     <form id="demo-combobox-form" novalidate>
-                        <label>Color Combobox (required)</label>
+                        <label>Combobox (required)</label>
                         <button
-                            id="cb-color"
+                            id="cb-demo"
                             type="button"
-                            role="combobox"
-                            aria-controls="cb-color-popover"
+                            aria-controls="cb-demo-popover"
                             aria-expanded="false"
-                            name="color"
+                            aria-labelledby="cb-demo-label"
                         >
-                            Select color
+                            <svg
+                                style="
+                                    margin-right: 0.1rem;
+                                    width: 1rem;
+                                    height: 1rem;
+                                "
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-square-mouse-pointer-icon lucide-square-mouse-pointer"
+                            >
+                                <path
+                                    d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"
+                                />
+                                <path
+                                    d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"
+                                />
+                            </svg>
+                            <span id="cb-demo-label">Click to Select</span>
                         </button>
-                        <div id="cb-color-popover" role="dialog" hidden>
+                        <div id="cb-demo-popover" role="dialog" hidden>
                             <input
-                                id="cb-color-search"
+                                id="cb-demo-search"
                                 type="text"
                                 role="combobox"
                                 aria-expanded="true"
-                                aria-controls="cb-color-listbox"
+                                aria-controls="cb-demo-listbox"
                                 placeholder="Search color..."
                             />
-                            <div id="cb-color-listbox" role="listbox">
+                            <div id="cb-demo-listbox" role="listbox">
                                 <div
                                     role="group"
                                     aria-labelledby="colors-label"

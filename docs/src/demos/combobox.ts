@@ -4,7 +4,7 @@ import { createLogger } from "../utils/logger";
 export function initComboboxDemo() {
     const log = createLogger("#log-combobox");
 
-    const trigger = document.getElementById("cb-color") as HTMLElement | null;
+    const trigger = document.getElementById("cb-demo") as HTMLElement | null;
     const formEl = document.getElementById(
         "demo-combobox-form"
     ) as HTMLFormElement | null;

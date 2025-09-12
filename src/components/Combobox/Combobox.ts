@@ -314,7 +314,7 @@ export class Combobox extends Input {
         this._value = String(value);
 
         if (label) {
-            this.trigger.textContent = label;
+            this.triggerLabelElement.textContent = label;
         }
 
         this.validate();
@@ -392,6 +392,18 @@ export class Combobox extends Input {
     validate() {
         this.memInput.value = this._value ?? "";
         super.validate();
+    }
+
+    get triggerLabelElement() {
+        if (this.trigger.hasAttribute("aria-labelledby")) {
+            return (
+                document.getElementById(
+                    this.trigger.getAttribute("aria-labelledby") as string
+                ) ?? this.trigger
+            );
+        }
+
+        return this.trigger;
     }
 
     get elements() {

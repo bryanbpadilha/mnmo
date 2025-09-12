@@ -320,6 +320,7 @@ declare class Combobox extends Input {
     private resetListboxState;
     syncConstraints(): void;
     validate(): void;
+    get triggerLabelElement(): HTMLElement;
     get elements(): HTMLInputElement[];
     get value(): string;
 }
