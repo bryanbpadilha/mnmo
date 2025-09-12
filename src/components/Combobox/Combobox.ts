@@ -7,7 +7,7 @@ import {
     TInputEvent,
 } from "../Input";
 import { Listbox } from "../Listbox";
-import { Popover } from "../Popover";
+import { IPopoverConfig, Popover } from "../Popover";
 
 export interface IComboboxConfig {
     onChange?: TInputEvent<Combobox>;
@@ -18,6 +18,7 @@ export interface IComboboxConfig {
     onOpen?: (combobox: Combobox) => void | Promise<void>;
     onClose?: (combobox: Combobox) => void | Promise<void>;
     filter?: (option: HTMLElement, query: string) => boolean;
+    popover?: Partial<Pick<IPopoverConfig, "offset" | "placement">>;
 }
 
 export class Combobox extends Input {
@@ -100,6 +101,7 @@ export class Combobox extends Input {
                 this.resetListboxState();
                 if (this.config?.onClose) await this.config.onClose(this);
             },
+            ...config?.popover,
         });
 
         this.search.addEventListener("invalid", (event) => {

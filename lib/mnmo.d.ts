@@ -299,6 +299,7 @@ interface IComboboxConfig {
     onOpen?: (combobox: Combobox) => void | Promise<void>;
     onClose?: (combobox: Combobox) => void | Promise<void>;
     filter?: (option: HTMLElement, query: string) => boolean;
+    popover?: Partial<Pick<IPopoverConfig, "offset" | "placement">>;
 }
 declare class Combobox extends Input {
     trigger: HTMLElement;
