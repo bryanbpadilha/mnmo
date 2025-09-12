@@ -77,8 +77,8 @@ export class Combobox extends Input {
               );
 
         this.listbox = new Listbox(listboxEl, {
-            onSelect: () => {
-                this.pendingSelected = this.listbox.selected;
+            onSelect: (listbox) => {
+                this.pendingSelected = listbox.selected;
             },
         });
 
