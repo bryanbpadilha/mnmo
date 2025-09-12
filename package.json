@@ -19,12 +19,15 @@
     "description": "Headless UI in vanilla JS",
     "scripts": {
         "rollup": "rollup -c",
+        "rollup:watch": "rollup -c -w",
         "build": "rm -rf lib && npm run rollup",
         "prepublishOnly": "npm run build",
         "prepare": "husky install",
         "docs:dev": "vite docs",
+        "docs:dev:open": "vite docs --open",
         "docs:build": "vite build docs",
-        "docs:preview": "vite preview docs"
+        "docs:preview": "vite preview docs",
+        "dev": "concurrently -k -n ROLLUP,DOCS -c green,cyan \"npm:rollup:watch\" \"npm:docs:dev:open\""
     },
     "devDependencies": {
         "@rollup/plugin-node-resolve": "^15.2.3",
