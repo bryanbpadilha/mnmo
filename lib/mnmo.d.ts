@@ -176,7 +176,10 @@ declare class RadioGroup extends Input {
     element: HTMLElement;
     radioButtons: HTMLInputElement[];
     config?: IRadioGroupConfig;
+    private boundHandleInvalid;
+    private boundHandleInput;
     constructor(element: TSelector<HTMLElement>, config?: IRadioGroupConfig);
+    destroy(): void;
     get elements(): HTMLInputElement[];
     get checked(): HTMLInputElement | undefined;
     get value(): string | null;
@@ -192,7 +195,11 @@ interface ICheckboxGroupConfig {
 declare class CheckboxGroup extends Input {
     element: HTMLElement;
     checkboxes: HTMLInputElement[];
+    config?: ICheckboxGroupConfig;
+    private boundHandleInvalid;
+    private boundHandleInput;
     constructor(element: TSelector<HTMLElement>, config?: ICheckboxGroupConfig);
+    destroy(): void;
     get elements(): HTMLInputElement[];
     get checked(): HTMLInputElement[] | undefined;
     get value(): string | string[] | null;
@@ -208,7 +215,10 @@ interface ICheckboxConfig {
 declare class Checkbox extends Input {
     element: HTMLInputElement;
     config?: ICheckboxConfig;
+    private boundHandleInvalid;
+    private boundHandleInput;
     constructor(element: TSelector<HTMLInputElement>, config?: ICheckboxConfig);
+    destroy(): void;
     get elements(): HTMLInputElement[];
     get checked(): boolean;
     get value(): string | null;
@@ -224,7 +234,10 @@ interface ISelectConfig {
 declare class Select extends Input {
     element: HTMLSelectElement;
     config?: ISelectConfig;
+    private boundHandleInvalid;
+    private boundHandleInput;
     constructor(element: TSelector<HTMLSelectElement>, config?: ISelectConfig);
+    destroy(): void;
     get elements(): HTMLSelectElement[];
 }
 
@@ -283,7 +296,10 @@ interface IFileInputConfig {
 declare class FileInput extends Input {
     element: HTMLInputElement;
     config?: IFileInputConfig;
+    private boundHandleInvalid;
+    private boundHandleInput;
     constructor(element: TSelector<HTMLInputElement>, config?: IFileInputConfig);
+    destroy(): void;
     get elements(): HTMLInputElement[];
 }
 
@@ -332,7 +348,17 @@ declare class Combobox extends Input {
     pendingSelected: HTMLElement | null;
     config?: IComboboxConfig;
     private _value;
+    private boundHandleSearchInvalid;
+    private boundHandleTriggerClick;
+    private boundHandleTriggerKeydown;
+    private boundHandleSearchInput;
+    private boundHandleSearchKeydown;
+    private boundHandleListboxClick;
     constructor(trigger: TSelector<HTMLElement>, config?: IComboboxConfig);
+    destroy(): void;
+    private handleTriggerKeydown;
+    private handleSearchKeydown;
+    private handleListboxClick;
     private getVisibleOptions;
     private applyFilter;
     private commitSelection;

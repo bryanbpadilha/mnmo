@@ -7,10 +7,6 @@ import {
     TInputEvent,
 } from "../Input";
 
-const ERRORS = [["valueMissing", "required"], ["badInput"], ["typeMismatch"]];
-
-const CONSTRAINTS = ERRORS.map(([errorName, constraintName]) => constraintName);
-
 export interface IRadioGroupConfig {
     onChange?: TInputEvent<RadioGroup>;
     onInvalid?: TInputEvent<RadioGroup>;
@@ -24,6 +20,9 @@ export class RadioGroup extends Input {
     element: HTMLElement;
     radioButtons: HTMLInputElement[];
     config?: IRadioGroupConfig;
+
+    private boundHandleInvalid: (event: Event) => void;
+    private boundHandleInput: (event: Event) => void;
 
     constructor(element: TSelector<HTMLElement>, config?: IRadioGroupConfig) {
         super({
@@ -40,17 +39,22 @@ export class RadioGroup extends Input {
 
         this.syncConstraints();
 
-        Array.from(this.radioButtons).forEach((button) =>
-            button.addEventListener("invalid", (event) => {
-                this.handleInvalid(event);
-            })
-        );
+        // Bind once, apply to all
+        this.boundHandleInvalid = (event: Event) => this.handleInvalid(event);
+        this.boundHandleInput = (event: Event) => this.handleChange(event);
 
-        Array.from(this.radioButtons).forEach((button) =>
-            button.addEventListener("input", (event) => {
-                this.handleChange(event);
-            })
-        );
+        this.radioButtons.forEach((button) => {
+            button.addEventListener("invalid", this.boundHandleInvalid);
+            button.addEventListener("input", this.boundHandleInput);
+        });
+    }
+
+    destroy() {
+        this.radioButtons.forEach((button) => {
+            button.removeEventListener("invalid", this.boundHandleInvalid);
+            button.removeEventListener("input", this.boundHandleInput);
+        });
+        super.destroy();
     }
 
     get elements() {

@@ -1,4 +1,13 @@
-import { Form, Textbox } from "../mnmo";
+import {
+    Form,
+    Textbox,
+    Select,
+    RadioGroup,
+    CheckboxGroup,
+    Checkbox,
+    Combobox,
+    FileInput,
+} from "../mnmo";
 
 export function initMasterFormDemo() {
     const section1El = document.getElementById(
@@ -33,7 +42,6 @@ export function initMasterFormDemo() {
     const buildForm1 = () => {
         const form = new Form(section1El, { onInput: updateUI });
 
-        // Programmatic Validation:
         const username = new Textbox(
             section1El.querySelector('[name="username"]') as HTMLInputElement,
             {
@@ -45,18 +53,34 @@ export function initMasterFormDemo() {
             }
         );
 
-        form.append(username);
+        const countryTrigger = section1El.querySelector(
+            "#mf-country-trigger"
+        ) as HTMLElement;
+        const country = new Combobox(countryTrigger, {
+            required: { value: true, message: "Please select a country" },
+        });
+
+        const genderEl = section1El.querySelector(
+            "#mf-gender-group"
+        ) as HTMLElement;
+        const gender = new RadioGroup(genderEl, {
+            required: { value: true, message: "Gender is required" },
+        });
+
+        form.append(username, country, gender);
         return form;
     };
 
-    // --- Helper to build Form 2 (Job) ---
+    // --- Helper to build Form 2 (Job Application) ---
     const buildForm2 = () => {
         const form = new Form(section2El, { onInput: updateUI });
 
-        const department = new Textbox(
-            section2El.querySelector('[name="department"]') as HTMLInputElement,
+        const department = new Select(
+            section2El.querySelector(
+                '[name="department"]'
+            ) as HTMLSelectElement,
             {
-                required: { value: true, message: "Department is required" },
+                required: { value: true, message: "Select a department" },
             }
         );
 
@@ -68,7 +92,28 @@ export function initMasterFormDemo() {
             }
         );
 
-        form.append(department, years);
+        const skillsEl = section2El.querySelector(
+            "#mf-skills-group"
+        ) as HTMLElement;
+        const skills = new CheckboxGroup(skillsEl, {
+            required: { value: true, message: "Select at least one skill" },
+        });
+
+        const resume = new FileInput(
+            section2El.querySelector('[name="resume"]') as HTMLInputElement,
+            {
+                required: { value: true, message: "Resume file is required" },
+            }
+        );
+
+        const terms = new Checkbox(
+            section2El.querySelector('[name="terms"]') as HTMLInputElement,
+            {
+                required: { value: true, message: "You must accept terms" },
+            }
+        );
+
+        form.append(department, years, skills, resume, terms);
         return form;
     };
 
@@ -76,18 +121,24 @@ export function initMasterFormDemo() {
     const getNativeData = (formEl: HTMLFormElement) => {
         const formData = new FormData(formEl);
         const values: Record<string, any> = {};
-        formData.forEach((value, key) => {
-            values[key] = value;
+
+        const keys = Array.from(formData.keys());
+        const uniqueKeys = new Set(keys);
+
+        uniqueKeys.forEach((key) => {
+            const allValues = formData.getAll(key);
+            values[key] = allValues.length > 1 ? allValues : allValues[0];
         });
+
         return values;
     };
 
     // --- Helper: Native Validation Logic (Fallback) ---
-    // Note: Since our HTML has no 'required' attributes (they are added by JS),
-    // this will likely return Valid/Empty unless the user manually added attributes to HTML.
     const getNativeValidation = (formEl: HTMLFormElement) => {
         const isValid = formEl.checkValidity();
-        return isValid ? "Valid (Native Check)" : "Invalid (Native Check)";
+        return isValid
+            ? "Valid (Native Check - No Rules Found)"
+            : "Invalid (Native Check)";
     };
 
     // --- Update UI ---
@@ -95,14 +146,10 @@ export function initMasterFormDemo() {
         btnToggle1.textContent = form1 ? "Destroy Form 1" : "Initialize Form 1";
         btnToggle2.textContent = form2 ? "Destroy Form 2" : "Initialize Form 2";
 
-        indicator1.textContent = form1
-            ? "Active (MNMO Validation)"
-            : "Inactive (Native DOM)";
+        indicator1.textContent = form1 ? "Active (MNMO)" : "Inactive";
         indicator1.className = form1 ? "status-active" : "status-destroyed";
 
-        indicator2.textContent = form2
-            ? "Active (MNMO Validation)"
-            : "Inactive (Native DOM)";
+        indicator2.textContent = form2 ? "Active (MNMO)" : "Inactive";
         indicator2.className = form2 ? "status-active" : "status-destroyed";
 
         if (form1 || form2) {
@@ -110,10 +157,10 @@ export function initMasterFormDemo() {
                 section1: form1 ? form1.values : getNativeData(section1El),
                 section2: form2 ? form2.values : getNativeData(section2El),
             };
-            // Add a note about the source
+
             const meta = {
-                source1: form1 ? "MNMO Class" : "Native FormData",
-                source2: form2 ? "MNMO Class" : "Native FormData",
+                source1: form1 ? "MNMO Class" : "Native (Limited)",
+                source2: form2 ? "MNMO Class" : "Native (Limited)",
             };
             logEl.textContent = JSON.stringify({ ...meta, ...data }, null, 2);
         }
@@ -145,39 +192,54 @@ export function initMasterFormDemo() {
         logEl.textContent = "Processing Master Submit...\n";
 
         // Logic for Section 1
-        const results1 = form1
-            ? {
-                  type: "MNMO Class",
-                  values: form1.values,
-                  status: form1.isValid ? "Valid" : form1.errors,
-              }
-            : {
-                  type: "Native DOM",
-                  values: getNativeData(section1El),
-                  status: getNativeValidation(section1El),
-              };
+        let results1;
+        if (form1) {
+            // ACTIVE: Use JS Logic
+            results1 = {
+                mode: "Active (MNMO)",
+                values: form1.values,
+                status: form1.isValid ? "Valid" : form1.errors,
+            };
+        } else {
+            // INACTIVE: Use Native Logic
+            results1 = {
+                mode: "Inactive (Native)",
+                values: getNativeData(section1El),
+                status: getNativeValidation(section1El),
+            };
+        }
 
         // Logic for Section 2
-        const results2 = form2
-            ? {
-                  type: "MNMO Class",
-                  values: form2.values,
-                  status: form2.isValid ? "Valid" : form2.errors,
-              }
-            : {
-                  type: "Native DOM",
-                  values: getNativeData(section2El),
-                  status: getNativeValidation(section2El),
-              };
+        let results2;
+        if (form2) {
+            // ACTIVE: Use JS Logic
+            results2 = {
+                mode: "Active (MNMO)",
+                values: form2.values,
+                status: form2.isValid ? "Valid" : form2.errors,
+            };
+        } else {
+            // INACTIVE: Use Native Logic
+            results2 = {
+                mode: "Inactive (Native)",
+                values: getNativeData(section2El),
+                status: getNativeValidation(section2El),
+            };
+        }
 
-        const globalStatus =
-            (results1.status === "Valid" ||
-                (results1.type === "Native DOM" &&
-                    section1El.checkValidity())) &&
-            (results2.status === "Valid" ||
-                (results2.type === "Native DOM" && section2El.checkValidity()))
-                ? "SUCCESS"
-                : "FAILURE";
+        // Helper to check validity safely
+        const isValidStatus = (status: string | Record<string, string>) => {
+            if (typeof status === "string") {
+                return status === "Valid" || status.startsWith("Valid");
+            }
+            // If it's an object, it's a map of errors
+            return Object.keys(status).length === 0;
+        };
+
+        const isS1Valid = isValidStatus(results1.status);
+        const isS2Valid = isValidStatus(results2.status);
+
+        const globalStatus = isS1Valid && isS2Valid ? "SUCCESS" : "FAILURE";
 
         const report = {
             section1: results1,

@@ -7,10 +7,6 @@ import {
     TInputEvent,
 } from "../Input";
 
-const ERRORS = [["valueMissing", "required"], ["badInput"], ["typeMismatch"]];
-
-const CONSTRAINTS = ERRORS.map(([errorName, constraintName]) => constraintName);
-
 export interface ICheckboxGroupConfig {
     onChange?: TInputEvent<CheckboxGroup>;
     onInvalid?: TInputEvent<CheckboxGroup>;
@@ -23,6 +19,10 @@ export interface ICheckboxGroupConfig {
 export class CheckboxGroup extends Input {
     element: HTMLElement;
     checkboxes: HTMLInputElement[];
+    config?: ICheckboxGroupConfig; // Add config property typing for strictness if needed or Input handles it
+
+    private boundHandleInvalid: (event: Event) => void;
+    private boundHandleInput: (event: Event) => void;
 
     constructor(
         element: TSelector<HTMLElement>,
@@ -44,17 +44,21 @@ export class CheckboxGroup extends Input {
 
         this.syncConstraints();
 
-        Array.from(this.checkboxes).forEach((button) =>
-            button.addEventListener("invalid", (event) => {
-                this.handleInvalid(event);
-            })
-        );
+        this.boundHandleInvalid = (event: Event) => this.handleInvalid(event);
+        this.boundHandleInput = (event: Event) => this.handleChange(event);
 
-        Array.from(this.checkboxes).forEach((button) =>
-            button.addEventListener("input", (event) => {
-                this.handleChange(event);
-            })
-        );
+        this.checkboxes.forEach((button) => {
+            button.addEventListener("invalid", this.boundHandleInvalid);
+            button.addEventListener("input", this.boundHandleInput);
+        });
+    }
+
+    destroy() {
+        this.checkboxes.forEach((button) => {
+            button.removeEventListener("invalid", this.boundHandleInvalid);
+            button.removeEventListener("input", this.boundHandleInput);
+        });
+        super.destroy();
     }
 
     get elements() {
@@ -71,7 +75,9 @@ export class CheckboxGroup extends Input {
                 ? this.checked.map((element) => element.value)
                 : null;
         } else {
-            return this.checked ? this.checked[0].value : null;
+            return this.checked && this.checked.length > 0
+                ? this.checked[0].value
+                : null;
         }
     }
 }

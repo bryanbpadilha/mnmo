@@ -20,6 +20,9 @@ export class FileInput extends Input {
     element: HTMLInputElement;
     config?: IFileInputConfig;
 
+    private boundHandleInvalid: (event: Event) => void;
+    private boundHandleInput: (event: Event) => void;
+
     constructor(
         element: TSelector<HTMLInputElement>,
         config?: IFileInputConfig
@@ -37,13 +40,17 @@ export class FileInput extends Input {
 
         this.syncConstraints();
 
-        this.element.addEventListener("invalid", (event) => {
-            this.handleInvalid(event);
-        });
+        this.boundHandleInvalid = (event: Event) => this.handleInvalid(event);
+        this.boundHandleInput = (event: Event) => this.handleChange(event);
 
-        this.element.addEventListener("input", (event) => {
-            this.handleChange(event);
-        });
+        this.element.addEventListener("invalid", this.boundHandleInvalid);
+        this.element.addEventListener("input", this.boundHandleInput);
+    }
+
+    destroy() {
+        this.element.removeEventListener("invalid", this.boundHandleInvalid);
+        this.element.removeEventListener("input", this.boundHandleInput);
+        super.destroy();
     }
 
     get elements() {

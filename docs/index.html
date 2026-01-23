@@ -240,12 +240,12 @@
             </section>
 
             <section id="masterform">
-                <h2>Master Form</h2>
+                <h2>Master Form Emulation</h2>
                 <div class="master-grid">
-                    <!-- Form 1 -->
+                    <!-- Form 1: Identity -->
                     <div class="sub-form-card">
                         <h4>
-                            My Identity
+                            Identity
                             <span id="mf-indicator-1" class="status-destroyed"
                                 >Inactive</span
                             >
@@ -257,26 +257,95 @@
                             Initialize Form 1
                         </button>
 
-                        <form id="mf-section-1" novalidate>
+                        <form
+                            id="mf-section-1"
+                            novalidate
+                            onsubmit="return false;"
+                        >
                             <label
-                                >Username (JS: required, min 3)
-                                <!-- Attributes removed here; applied via JS -->
+                                >Username (Textbox)
                                 <input type="text" name="username" />
                             </label>
-                            <label
-                                >Role
-                                <select name="role">
-                                    <option value="user">User</option>
-                                    <option value="admin">Admin</option>
-                                </select>
-                            </label>
+
+                            <!-- Combobox Structure -->
+                            <label>Country (Combobox)</label>
+                            <button
+                                id="mf-country-trigger"
+                                type="button"
+                                aria-controls="mf-country-popover"
+                                aria-expanded="false"
+                                name="country"
+                            >
+                                Select Country...
+                            </button>
+                            <div
+                                id="mf-country-popover"
+                                role="dialog"
+                                hidden
+                                style="
+                                    background: #333;
+                                    border: 1px solid #555;
+                                    padding: 0.5rem;
+                                    position: absolute;
+                                    z-index: 10;
+                                "
+                            >
+                                <input
+                                    id="mf-country-search"
+                                    type="text"
+                                    role="combobox"
+                                    aria-controls="mf-country-list"
+                                    placeholder="Search..."
+                                    style="margin-bottom: 0.5rem"
+                                />
+                                <div id="mf-country-list" role="listbox">
+                                    <div role="option" value="us">
+                                        United States
+                                    </div>
+                                    <div role="option" value="br">Brazil</div>
+                                    <div role="option" value="de">Germany</div>
+                                    <div role="option" value="jp">Japan</div>
+                                </div>
+                            </div>
+
+                            <!-- Radio Group -->
+                            <fieldset
+                                id="mf-gender-group"
+                                style="margin-top: 1rem"
+                            >
+                                <legend>Gender (RadioGroup)</legend>
+                                <label
+                                    ><input
+                                        type="radio"
+                                        name="gender"
+                                        value="m"
+                                    />
+                                    Male</label
+                                >
+                                <label
+                                    ><input
+                                        type="radio"
+                                        name="gender"
+                                        value="f"
+                                    />
+                                    Female</label
+                                >
+                                <label
+                                    ><input
+                                        type="radio"
+                                        name="gender"
+                                        value="o"
+                                    />
+                                    Other</label
+                                >
+                            </fieldset>
                         </form>
                     </div>
 
-                    <!-- Form 2 -->
+                    <!-- Form 2: Job App -->
                     <div class="sub-form-card">
                         <h4>
-                            My Job
+                            Job App
                             <span id="mf-indicator-2" class="status-destroyed"
                                 >Inactive</span
                             >
@@ -288,18 +357,81 @@
                             Initialize Form 2
                         </button>
 
-                        <form id="mf-section-2" novalidate>
+                        <form
+                            id="mf-section-2"
+                            novalidate
+                            onsubmit="return false;"
+                        >
                             <label
-                                >Department (JS: required)
-                                <input type="text" name="department" />
+                                >Department (Select)
+                                <select name="department">
+                                    <option value="">-- Choose --</option>
+                                    <option value="eng">Engineering</option>
+                                    <option value="hr">HR</option>
+                                    <option value="sales">Sales</option>
+                                </select>
                             </label>
+
                             <label
-                                >Experience (JS: max 50)
+                                >Years Exp (Textbox, max 50)
                                 <input type="number" name="years" />
                             </label>
+
+                            <!-- Checkbox Group -->
+                            <fieldset
+                                id="mf-skills-group"
+                                style="margin-top: 1rem"
+                            >
+                                <legend>
+                                    Skills (CheckboxGroup - pick 1+)
+                                </legend>
+                                <label
+                                    ><input
+                                        type="checkbox"
+                                        name="skills"
+                                        value="js"
+                                    />
+                                    Javascript</label
+                                >
+                                <label
+                                    ><input
+                                        type="checkbox"
+                                        name="skills"
+                                        value="css"
+                                    />
+                                    CSS</label
+                                >
+                                <label
+                                    ><input
+                                        type="checkbox"
+                                        name="skills"
+                                        value="html"
+                                    />
+                                    HTML</label
+                                >
+                            </fieldset>
+
+                            <!-- File Input -->
+                            <label style="margin-top: 1rem"
+                                >Resume (FileInput)
+                                <input type="file" name="resume" />
+                            </label>
+
+                            <!-- Single Checkbox -->
+                            <div style="margin-top: 1rem">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="terms"
+                                        value="accepted"
+                                    />
+                                    I accept the terms (Checkbox)
+                                </label>
+                            </div>
                         </form>
                     </div>
                 </div>
+
                 <div
                     style="
                         background: #333;

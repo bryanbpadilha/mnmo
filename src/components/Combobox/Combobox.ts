@@ -27,10 +27,18 @@ export class Combobox extends Input {
     search: HTMLInputElement;
     listbox: Listbox;
     popover: Popover;
-    memInput: HTMLInputElement; // In-memory input used only for validity/constraints integration
+    memInput: HTMLInputElement;
     pendingSelected: HTMLElement | null;
     config?: IComboboxConfig;
     private _value: string;
+
+    // Bound handlers for cleanup
+    private boundHandleSearchInvalid: (e: Event) => void;
+    private boundHandleTriggerClick: (e: MouseEvent) => void;
+    private boundHandleTriggerKeydown: (e: KeyboardEvent) => void;
+    private boundHandleSearchInput: (e: Event) => void;
+    private boundHandleSearchKeydown: (e: KeyboardEvent) => void;
+    private boundHandleListboxClick: (e: MouseEvent) => void;
 
     constructor(trigger: TSelector<HTMLElement>, config?: IComboboxConfig) {
         super({
@@ -62,7 +70,6 @@ export class Combobox extends Input {
             this.trigger.getAttribute("id") ||
             uid("combobox");
 
-        // Create in-memory input for validity handling and Form integration (not attached to DOM)
         this.memInput = document.createElement("input");
         this.memInput.type = "text";
         this.memInput.name = derivedName;
@@ -87,6 +94,7 @@ export class Combobox extends Input {
         this.trigger.setAttribute("aria-haspopup", "dialog");
         this.trigger.setAttribute("aria-expanded", "false");
         this.search.setAttribute("aria-expanded", "true");
+        // Super constraints sync
         this.syncConstraints();
 
         this.popover = new Popover(this.trigger, this.dialog, {
@@ -104,71 +112,118 @@ export class Combobox extends Input {
             ...config?.popover,
         });
 
-        this.search.addEventListener("invalid", (event) => {
-            this.handleInvalid(event);
-        });
+        // Initialize Bound Handlers
+        this.boundHandleSearchInvalid = (event) => this.handleInvalid(event);
+        this.boundHandleTriggerClick = () => this.popover.toggle();
+        this.boundHandleTriggerKeydown = (e) => this.handleTriggerKeydown(e);
+        this.boundHandleSearchInput = () => this.applyFilter(this.search.value);
+        this.boundHandleSearchKeydown = (e) => this.handleSearchKeydown(e);
+        this.boundHandleListboxClick = (e) => this.handleListboxClick(e);
 
-        this.trigger.addEventListener("click", () => {
-            this.popover.toggle();
-        });
-
-        this.trigger.addEventListener("keydown", (e) => {
-            switch (e.key) {
-                case "Enter":
-                case " ":
-                case "ArrowDown":
-                case "ArrowUp":
-                    e.preventDefault();
-                    this.popover.show();
-                    break;
-            }
-        });
-
-        this.search.addEventListener("input", () => {
-            this.applyFilter(this.search.value);
-        });
-
-        this.search.addEventListener("keydown", (e) => {
-            switch (e.key) {
-                case "ArrowDown":
-                case "ArrowUp":
-                    e.preventDefault();
-                    this.listbox.checkKeyDown(e as KeyboardEvent);
-                    break;
-                case "Enter":
-                    e.preventDefault();
-                    if (!this.listbox.selected) {
-                        const firstVisible = this.getVisibleOptions()[0];
-                        if (firstVisible) {
-                            this.listbox.selected = firstVisible;
-                            this.pendingSelected = firstVisible;
-                        }
-                    }
-                    this.commitSelection();
-                    break;
-                case "Escape":
-                    e.preventDefault();
-                    this.popover.hide();
-                    this.trigger.focus();
-                    break;
-            }
-        });
-
-        this.listbox.element.addEventListener("click", (e) => {
-            const option = (e.target as HTMLElement).closest(
-                '[role="option"]'
-            ) as HTMLElement | null;
-            if (option) {
-                this.listbox.selected = option;
-                this.pendingSelected = option;
-                this.commitSelection();
-            }
-        });
+        // Attach Listeners
+        this.search.addEventListener("invalid", this.boundHandleSearchInvalid);
+        this.trigger.addEventListener("click", this.boundHandleTriggerClick);
+        this.trigger.addEventListener(
+            "keydown",
+            this.boundHandleTriggerKeydown
+        );
+        this.search.addEventListener("input", this.boundHandleSearchInput);
+        this.search.addEventListener("keydown", this.boundHandleSearchKeydown);
+        this.listbox.element.addEventListener(
+            "click",
+            this.boundHandleListboxClick
+        );
 
         if (this.listbox.selected) {
             this.updateValueFromSelected();
         }
     }
+
+    destroy() {
+        // Remove Listeners
+        this.search.removeEventListener(
+            "invalid",
+            this.boundHandleSearchInvalid
+        );
+        this.trigger.removeEventListener("click", this.boundHandleTriggerClick);
+        this.trigger.removeEventListener(
+            "keydown",
+            this.boundHandleTriggerKeydown
+        );
+        this.search.removeEventListener("input", this.boundHandleSearchInput);
+        this.search.removeEventListener(
+            "keydown",
+            this.boundHandleSearchKeydown
+        );
+        this.listbox.element.removeEventListener(
+            "click",
+            this.boundHandleListboxClick
+        );
+
+        // Cleanup Helper Classes
+        // (Assuming Popover/Listbox have destroy methods, if not, at least we removed our listeners)
+        // if (this.popover.destroy) this.popover.destroy();
+
+        // Reset DOM attributes modified by this class
+        this.trigger.removeAttribute("aria-haspopup");
+        this.trigger.removeAttribute("aria-expanded");
+        this.search.removeAttribute("aria-expanded");
+
+        super.destroy();
+    }
+
+    // --- Extracted Handlers ---
+
+    private handleTriggerKeydown(e: KeyboardEvent) {
+        switch (e.key) {
+            case "Enter":
+            case " ":
+            case "ArrowDown":
+            case "ArrowUp":
+                e.preventDefault();
+                this.popover.show();
+                break;
+        }
+    }
+
+    private handleSearchKeydown(e: KeyboardEvent) {
+        switch (e.key) {
+            case "ArrowDown":
+            case "ArrowUp":
+                e.preventDefault();
+                this.listbox.checkKeyDown(e);
+                break;
+            case "Enter":
+                e.preventDefault();
+                if (!this.listbox.selected) {
+                    const firstVisible = this.getVisibleOptions()[0];
+                    if (firstVisible) {
+                        this.listbox.selected = firstVisible;
+                        this.pendingSelected = firstVisible;
+                    }
+                }
+                this.commitSelection();
+                break;
+            case "Escape":
+                e.preventDefault();
+                this.popover.hide();
+                this.trigger.focus();
+                break;
+        }
+    }
+
+    private handleListboxClick(e: MouseEvent) {
+        const option = (e.target as HTMLElement).closest(
+            '[role="option"]'
+        ) as HTMLElement | null;
+        if (option) {
+            this.listbox.selected = option;
+            this.pendingSelected = option;
+            this.commitSelection();
+        }
+    }
+
+    // --- Existing Logic ---
 
     private getVisibleOptions() {
         return Array.from(
@@ -179,9 +234,9 @@ export class Combobox extends Input {
     }
 
     private applyFilter(query: string) {
+        // ... (Existing implementation from your provided code)
         const normalized = query.trim().toLowerCase();
         const root = this.listbox.element;
-
         const allOptions = Array.from(
             root.querySelectorAll('[role="option"]')
         ) as HTMLElement[];
@@ -189,17 +244,11 @@ export class Combobox extends Input {
             root.querySelectorAll('[role="group"]')
         ) as HTMLElement[];
 
-        // If query is empty, show everything (both options and groups)
+        // If query is empty, show everything
         if (normalized.length === 0) {
-            for (const group of allGroups) {
-                group.removeAttribute("hidden");
-            }
-            for (const option of allOptions) {
-                option.removeAttribute("hidden");
-            }
-
+            for (const group of allGroups) group.removeAttribute("hidden");
+            for (const option of allOptions) option.removeAttribute("hidden");
             this.listbox.options = this.getVisibleOptions();
-
             if (
                 this.listbox.selected &&
                 this.listbox.selected.hasAttribute("hidden")
@@ -219,8 +268,8 @@ export class Combobox extends Input {
         };
 
         const getGroupLabel = (group: HTMLElement) => {
+            // ... (Existing logic)
             let label = "";
-
             const labelledby = group.getAttribute("aria-labelledby");
             if (labelledby) {
                 for (const id of labelledby.split(/\s+/)) {
@@ -228,69 +277,47 @@ export class Combobox extends Input {
                     if (el?.textContent) label += el.textContent + " ";
                 }
             }
-
             const ariaLabel = group.getAttribute("aria-label");
             if (ariaLabel) label += ariaLabel + " ";
-
             const heading = group.querySelector(
                 "[role='heading'], h1, h2, h3, h4, h5, h6"
             ) as HTMLElement | null;
             if (heading?.textContent) label += heading.textContent + " ";
-
             return label.trim().toLowerCase();
         };
 
-        // 1) If a group heading matches, show all options (and nested groups) under it
+        // Group Matching
         for (const group of allGroups) {
             const label = getGroupLabel(group);
             if (label && label.includes(normalized)) {
-                const subGroups = Array.from(
-                    group.querySelectorAll('[role="group"]')
-                ) as HTMLElement[];
                 const subOptions = Array.from(
                     group.querySelectorAll('[role="option"]')
                 ) as HTMLElement[];
-
-                // Mark entire subtree as visible
                 subOptions.forEach((o) => visibleOptions.add(o));
-
-                // Also ensure ancestors of this group become visible through options ancestry step
-                // (handled below when applying visibility and computing group visibility)
             }
         }
 
-        // 2) If individual options match, show only those options
+        // Option Matching
         for (const option of allOptions) {
-            if (optionMatches(option)) {
-                visibleOptions.add(option);
-            }
+            if (optionMatches(option)) visibleOptions.add(option);
         }
 
-        // Apply visibility to options
+        // Apply visibility
         for (const option of allOptions) {
-            if (visibleOptions.has(option)) {
-                option.removeAttribute("hidden");
-            } else {
-                option.setAttribute("hidden", "true");
-            }
+            visibleOptions.has(option)
+                ? option.removeAttribute("hidden")
+                : option.setAttribute("hidden", "true");
         }
-
-        // Apply visibility to groups: visible if the group contains any visible (not hidden) option
         for (const group of allGroups) {
             const hasVisibleOption = Array.from(
                 group.querySelectorAll('[role="option"]')
             ).some((o) => !o.hasAttribute("hidden"));
-            if (hasVisibleOption) {
-                group.removeAttribute("hidden");
-            } else {
-                group.setAttribute("hidden", "true");
-            }
+            hasVisibleOption
+                ? group.removeAttribute("hidden")
+                : group.setAttribute("hidden", "true");
         }
 
-        // Refresh listbox options to only include visible options
         this.listbox.options = this.getVisibleOptions();
-
-        // Clear selection if it became hidden
         if (
             this.listbox.selected &&
             this.listbox.selected.hasAttribute("hidden")
@@ -329,18 +356,11 @@ export class Combobox extends Input {
             this.listbox.element.querySelectorAll('[role="group"]')
         ) as HTMLElement[];
 
-        // Unhide everything
-        for (const group of allGroups) {
-            group.removeAttribute("hidden");
-        }
-        for (const option of allOptions) {
-            option.removeAttribute("hidden");
-        }
+        for (const group of allGroups) group.removeAttribute("hidden");
+        for (const option of allOptions) option.removeAttribute("hidden");
 
-        // Reset options list to all options
         this.listbox.options = allOptions;
 
-        // Restore committed selection if any
         const committed = this._value;
         if (committed) {
             const match = allOptions.find(
@@ -350,18 +370,14 @@ export class Combobox extends Input {
         } else {
             this.listbox.selected = null;
         }
-
         this.pendingSelected = this.listbox.selected;
     }
 
-    // Apply constraints/messages to the in-memory input (not the search field)
     syncConstraints() {
-        // Clear existing attributes
         this.memInput.removeAttribute("required");
         this.memInput.removeAttribute("required-message");
         this.memInput.removeAttribute("validation-message");
 
-        // Determine "required" from config or trigger attribute
         let required = false;
         let requiredMessage: string | undefined;
 
@@ -388,7 +404,6 @@ export class Combobox extends Input {
         }
     }
 
-    // Validate using the committed value mirrored into the in-memory input
     validate() {
         this.memInput.value = this._value ?? "";
         super.validate();
@@ -407,7 +422,6 @@ export class Combobox extends Input {
     }
 
     get elements() {
-        // Bind validity/constraints to the in-memory input
         return [this.memInput];
     }
 
