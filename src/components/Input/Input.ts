@@ -48,19 +48,32 @@ export class Input {
     isTouched: boolean;
     isValidated: boolean;
 
+    // Track attributes modified by this class to clean them up on destroy
+    protected appliedConstraints: string[] = [];
+
     constructor(properties: IInputProperties) {
         this.supportedConstraints = properties.supportedConstraints;
         this.isTouched = false;
         this.isValidated = false;
+        this.appliedConstraints = [];
     }
 
     /**
-     * Cleans up side effects on the element and disconnects from the Form.
+     * Cleans up side effects:
+     * 1. Removes validation attributes applied by JS.
+     * 2. Resets custom validity.
+     * 3. Disconnects from form.
      */
     destroy() {
-        // Reset validity. If we leave a custom validity string,
-        // the browser will consider the element permanently invalid
-        // even after this JS class is destroyed.
+        // Remove attributes we added
+        for (const attribute of this.appliedConstraints) {
+            for (const element of this.elements) {
+                element.removeAttribute(attribute);
+            }
+        }
+        this.appliedConstraints = [];
+
+        // Reset validity state
         this.setCustomValidity("");
 
         this.isTouched = false;
@@ -87,26 +100,46 @@ export class Input {
     }
 
     protected syncConstraintEntry(key: string) {
-        if (this.config && this.config[key]) {
+        if (this.config && this.config[key] !== undefined) {
             const constraint = this.config[key];
 
             let constraintValue: boolean | string | number;
             let constraintMessage: string | undefined;
 
-            if (typeof constraint === "object") {
+            if (
+                typeof constraint === "object" &&
+                constraint !== null &&
+                "value" in constraint
+            ) {
                 constraintValue = constraint.value;
                 constraintMessage = constraint.message;
             } else {
-                constraintValue = this.config[key] as boolean | string | number;
+                constraintValue = constraint as boolean | string | number;
             }
 
+            // Apply Attribute
             for (const element of this.elements) {
-                element.setAttribute(key, String(constraintValue));
+                if (typeof constraintValue === "boolean" && !constraintValue) {
+                    continue;
+                }
+
+                const strValue = String(constraintValue);
+                element.setAttribute(key, strValue);
+
+                // Track it so we can remove it on destroy
+                if (!this.appliedConstraints.includes(key)) {
+                    this.appliedConstraints.push(key);
+                }
             }
 
+            // Apply Message Attribute
             if (constraintMessage) {
+                const msgKey = `${key}-message`;
                 for (const element of this.elements) {
-                    element.setAttribute(`${key}-message`, constraintMessage);
+                    element.setAttribute(msgKey, constraintMessage);
+                }
+                if (!this.appliedConstraints.includes(msgKey)) {
+                    this.appliedConstraints.push(msgKey);
                 }
             }
         }

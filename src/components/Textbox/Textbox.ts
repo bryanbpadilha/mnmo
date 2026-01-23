@@ -8,20 +8,6 @@ import {
 } from "../Input";
 import { maskValue, restoreCursorPosition } from "./Textbox.util";
 
-const ERRORS = [
-    ["valueMissing", "required"],
-    ["badInput"],
-    ["typeMismatch"],
-    ["patternMismatch", "pattern"],
-    ["rangeOverflow", "max"],
-    ["rangeUnderflow", "min"],
-    ["stepMismatch", "step"],
-    ["tooLong", "maxLength"],
-    ["tooShort", "minLength"],
-];
-
-const CONSTRAINTS = ERRORS.map(([errorName, constraintName]) => constraintName);
-
 export interface ITextboxConfig {
     onChange?: TInputEvent<Textbox>;
     onInvalid?: TInputEvent<Textbox>;
@@ -44,6 +30,9 @@ export class Textbox extends Input {
     element: HTMLInputElement | HTMLTextAreaElement;
     config?: ITextboxConfig;
     mask?: string | ((value: string) => string) | null;
+
+    private boundHandleInput: (event: Event) => void;
+    private boundHandleInvalid: (event: Event) => void;
 
     constructor(
         element: TSelector<HTMLTextAreaElement | HTMLInputElement>,
@@ -69,6 +58,7 @@ export class Textbox extends Input {
         this.config = config;
         this.mask = this.config?.mask ?? this.element.getAttribute("mask");
 
+        // Apply config constraints to DOM
         this.syncConstraints();
 
         if (this.mask && !["tel", "text"].includes(this.element.type)) {
@@ -77,11 +67,11 @@ export class Textbox extends Input {
             );
         }
 
-        this.element.addEventListener("invalid", (event) => {
+        this.boundHandleInvalid = (event: Event) => {
             this.handleInvalid(event);
-        });
+        };
 
-        this.element.addEventListener("input", (e) => {
+        this.boundHandleInput = (e: Event) => {
             if (!this.mask) {
                 this.handleChange(e);
                 return;
@@ -97,7 +87,16 @@ export class Textbox extends Input {
             });
 
             this.handleChange(e);
-        });
+        };
+
+        this.element.addEventListener("invalid", this.boundHandleInvalid);
+        this.element.addEventListener("input", this.boundHandleInput);
+    }
+
+    destroy() {
+        this.element.removeEventListener("invalid", this.boundHandleInvalid);
+        this.element.removeEventListener("input", this.boundHandleInput);
+        super.destroy();
     }
 
     get elements() {

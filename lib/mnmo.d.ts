@@ -104,9 +104,13 @@ declare class Input {
     form?: Form;
     isTouched: boolean;
     isValidated: boolean;
+    protected appliedConstraints: string[];
     constructor(properties: IInputProperties);
     /**
-     * Cleans up side effects on the element and disconnects from the Form.
+     * Cleans up side effects:
+     * 1. Removes validation attributes applied by JS.
+     * 2. Resets custom validity.
+     * 3. Disconnects from form.
      */
     destroy(): void;
     protected emit<T>(key: string, event: T): void;
@@ -153,7 +157,10 @@ declare class Textbox extends Input {
     element: HTMLInputElement | HTMLTextAreaElement;
     config?: ITextboxConfig;
     mask?: string | ((value: string) => string) | null;
+    private boundHandleInput;
+    private boundHandleInvalid;
     constructor(element: TSelector<HTMLTextAreaElement | HTMLInputElement>, config?: ITextboxConfig);
+    destroy(): void;
     get elements(): HTMLInputElement[];
     get value(): any;
 }

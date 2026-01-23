@@ -80,3 +80,30 @@ ul[role="listbox"],
     color: red;
     font-weight: bold;
 }
+.master-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.sub-form-card {
+    border: 1px solid #444;
+    padding: 1rem;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.sub-form-card h4 {
+    margin-top: 0;
+    border-bottom: 1px solid #555;
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+@media (max-width: 700px) {
+    .master-grid {
+        grid-template-columns: 1fr;
+    }
+}
