@@ -1,0 +1,118 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+---
+
+<DocsLayout
+    title="Textbox"
+    description="A standard input field with masking capabilities."
+>
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+        <div class="p-6 space-y-6">
+            <div class="grid gap-4 w-full max-w-sm">
+                <div class="grid gap-2">
+                    <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        Plain Textbox
+                    </label>
+                    <input
+                        class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        id="tb-plain"
+                        type="text"
+                        name="plain"
+                        required
+                        minlength="3"
+                        placeholder="Type at least 3 chars"
+                    />
+                </div>
+
+                <div class="grid gap-2">
+                    <label class="text-sm font-medium leading-none">
+                        Masked Phone (attr mask)
+                    </label>
+                    <input
+                        class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                        id="tb-phone"
+                        type="tel"
+                        name="phone"
+                        placeholder="(99) 99999-9999"
+                    />
+                </div>
+
+                <div class="grid gap-2">
+                    <label class="text-sm font-medium leading-none">
+                        Masked CPF (programmatic)
+                    </label>
+                    <input
+                        class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                        id="tb-cpf"
+                        type="text"
+                        name="cpf"
+                        placeholder="999.999.999-99"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rounded-lg border bg-slate-950 text-slate-50 p-4 font-mono text-xs overflow-x-auto max-h-60">
+        <pre id="log-textbox"> Logs will appear here...</pre>
+    </div>
+
+    <script>
+        import { Textbox } from "@mnmo";
+        import { createLogger } from "@/lib/logger";
+
+        export function initTextboxDemo() {
+            const log = createLogger("#log-textbox");
+
+            const plainEl = document.getElementById(
+                "tb-plain",
+            ) as HTMLInputElement | null;
+            if (plainEl) {
+                new Textbox(plainEl, {
+                    onChange: (input) => {
+                        log.info("plain:onChange", {
+                            value: input.value,
+                            error: input.error,
+                            isValid: input.isValid,
+                        });
+                    },
+                    onInvalid: (input) => {
+                        log.warn("plain:onInvalid", input.error);
+                    },
+                });
+            }
+
+            const phoneEl = document.getElementById(
+                "tb-phone",
+            ) as HTMLInputElement | null;
+            if (phoneEl) {
+                new Textbox(phoneEl, {
+                    onChange: (input) => {
+                        log.info("phone:onChange", {
+                            value: input.value,
+                            error: input.error,
+                        });
+                    },
+                });
+            }
+
+            const cpfEl = document.getElementById(
+                "tb-cpf",
+            ) as HTMLInputElement | null;
+            if (cpfEl) {
+                new Textbox(cpfEl, {
+                    mask: "999.999.999-99",
+                    valueAs: (v) => v.replace(/\D/g, ""), // keep only digits
+                    onChange: (input) => {
+                        log.info("cpf:onChange", {
+                            display: cpfEl.value,
+                            value: input.value,
+                        });
+                    },
+                });
+            }
+        }
+
+        initTextboxDemo();
+    </script>
+</DocsLayout>

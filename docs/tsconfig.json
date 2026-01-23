@@ -1,16 +1,14 @@
 {
-    "extends": "../tsconfig.json",
+    "extends": "astro/tsconfigs/strict",
+    "include": [".astro/types.d.ts", "**/*"],
+    "exclude": ["dist"],
     "compilerOptions": {
-        "target": "ESNext",
-        "module": "ESNext",
-        "moduleResolution": "Node",
-        "strict": true,
+        "jsx": "react-jsx",
+        "jsxImportSource": "react",
         "baseUrl": ".",
         "paths": {
-            "mnmo": ["../src/main.ts"],
-            "mnmo/*": ["../src/*"]
-        },
-        "types": []
-    },
-    "include": ["src", "../src/**/*.ts"]
+            "@/*": ["./src/*"],
+            "@mnmo": ["../src/main.ts"]
+        }
+    }
 }
