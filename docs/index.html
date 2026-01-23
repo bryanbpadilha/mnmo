@@ -148,6 +148,20 @@
 
             <section id="form">
                 <h2>Form</h2>
+
+                <div class="demo-controls">
+                    <button id="btn-destroy-form">Destroy Form Class</button>
+                    <button id="btn-init-form" disabled>
+                        Initialize Form Class
+                    </button>
+                    <span
+                        >Status:
+                        <span id="form-status" class="status-active"
+                            >Active</span
+                        ></span
+                    >
+                </div>
+
                 <form id="demo-form" novalidate>
                     <div>
                         <label
@@ -176,7 +190,7 @@
                 </form>
                 <div>
                     <div>
-                        <h3>Values</h3>
+                        <h3>Values (Updates on Input/Change)</h3>
                         <pre id="form-values" class="log"></pre>
                     </div>
                     <div>

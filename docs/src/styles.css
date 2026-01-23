@@ -63,3 +63,20 @@ ul[role="listbox"],
     background: var(--accent);
     color: var(--bg);
 }
+
+.demo-controls {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.status-active {
+    color: green;
+    font-weight: bold;
+}
+.status-destroyed {
+    color: red;
+    font-weight: bold;
+}

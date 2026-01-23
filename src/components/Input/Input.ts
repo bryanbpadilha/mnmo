@@ -54,6 +54,21 @@ export class Input {
         this.isValidated = false;
     }
 
+    /**
+     * Cleans up side effects on the element and disconnects from the Form.
+     */
+    destroy() {
+        // Reset validity. If we leave a custom validity string,
+        // the browser will consider the element permanently invalid
+        // even after this JS class is destroyed.
+        this.setCustomValidity("");
+
+        this.isTouched = false;
+        this.isValidated = false;
+        this.form = undefined;
+        this.config = undefined;
+    }
+
     protected emit<T>(key: string, event: T) {
         if (this.config && this.config[key]) {
             this.config[key](this, this.form ?? undefined, event);

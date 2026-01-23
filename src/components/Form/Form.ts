@@ -23,6 +23,12 @@ export class Form {
     isDirty: boolean;
     isSubmitted: boolean;
 
+    // References to bound event handlers for cleanup
+    private boundHandleInput: (event: Event) => void;
+    private boundHandleChange: (event: Event) => void;
+    private boundHandleSubmit: (event: Event) => void;
+    private boundHandleInvalid: (event: Event) => void;
+
     constructor(element: TSelector<HTMLFormElement>, config?: IFormConfig) {
         this.element = selectElement<HTMLFormElement>(element, HTMLFormElement);
 
@@ -31,25 +37,43 @@ export class Form {
         this.isDirty = false;
         this.isSubmitted = false;
 
-        this.element.addEventListener("input", (event) => {
-            this.handleInput(event);
-        });
+        // Bind handlers to 'this' context and store references
+        this.boundHandleInput = (event: Event) => this.handleInput(event);
+        this.boundHandleChange = (event: Event) => this.handleChange(event);
+        // Cast SubmitEvent to Event for generic listener compatibility or handle strictly
+        this.boundHandleSubmit = (event: Event) =>
+            this.handleSubmit(event as SubmitEvent);
+        this.boundHandleInvalid = (event: Event) => this.handleInvalid(event);
 
-        this.element.addEventListener("change", (event) => {
-            this.handleChange(event);
-        });
+        this.element.addEventListener("input", this.boundHandleInput);
+        this.element.addEventListener("change", this.boundHandleChange);
+        this.element.addEventListener("submit", this.boundHandleSubmit);
+        this.element.addEventListener("invalid", this.boundHandleInvalid, true);
+    }
 
-        this.element.addEventListener("submit", (event) => {
-            this.handleSubmit(event);
-        });
-
-        this.element.addEventListener(
+    /**
+     * Removes all event listeners, destroys attached inputs,
+     * and clears references to prevent memory leaks.
+     */
+    destroy() {
+        this.element.removeEventListener("input", this.boundHandleInput);
+        this.element.removeEventListener("change", this.boundHandleChange);
+        this.element.removeEventListener("submit", this.boundHandleSubmit);
+        this.element.removeEventListener(
             "invalid",
-            (event) => {
-                this.handleInvalid(event);
-            },
+            this.boundHandleInvalid,
             true
         );
+
+        if (this.inputs) {
+            this.inputs.forEach((input) => input.destroy());
+            this.inputs = [];
+        }
+
+        this.config = undefined;
+        // logic reset
+        this.isDirty = false;
+        this.isSubmitted = false;
     }
 
     private async emit<T>(key: keyof IFormConfig, event: T) {

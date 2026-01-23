@@ -14,7 +14,16 @@ declare class Form {
     inputs?: Input[];
     isDirty: boolean;
     isSubmitted: boolean;
+    private boundHandleInput;
+    private boundHandleChange;
+    private boundHandleSubmit;
+    private boundHandleInvalid;
     constructor(element: TSelector<HTMLFormElement>, config?: IFormConfig);
+    /**
+     * Removes all event listeners, destroys attached inputs,
+     * and clears references to prevent memory leaks.
+     */
+    destroy(): void;
     private emit;
     private handleInput;
     private handleChange;
@@ -96,6 +105,10 @@ declare class Input {
     isTouched: boolean;
     isValidated: boolean;
     constructor(properties: IInputProperties);
+    /**
+     * Cleans up side effects on the element and disconnects from the Form.
+     */
+    destroy(): void;
     protected emit<T>(key: string, event: T): void;
     protected handleChange(event: Event): void;
     protected handleInvalid(event: Event): void;
